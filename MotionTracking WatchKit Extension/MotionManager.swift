@@ -71,6 +71,11 @@ class MotionManager {
     var y_acc = [Float]()
     var z_acc = [Float]()
     
+    
+    
+    
+    
+    
 
     // MARK: Initialization
     
@@ -159,21 +164,41 @@ class MotionManager {
             recentDetection = false
             magnitude_buffer.reset()
             
-            var ArrayOfSampleData2 = [[Float]]()
+            var ArrayOfSampleData2 = [[Float]](repeating: [Float](repeating: 0, count: 1), count: 6)
             
 
             
-                for j in (i_detection-60)...(i_detection+60) {
-
-                    ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
-
-                }
+//                for j in (i_detection-60)...(i_detection+60) {
+//
+//                    ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
+//
+//                }
             
-            for j in (i_detection-60)...(i_detection+60) {
+            let xg_shot = self.x_gyro[(i_detection-60)...(i_detection+60)]
+            let yg_shot = self.y_gyro[(i_detection-60)...(i_detection+60)]
+            let zg_shot = self.z_gyro[(i_detection-60)...(i_detection+60)]
+            let xa_shot = self.x_acc[(i_detection-60)...(i_detection+60)]
+            let ya_shot = self.y_acc[(i_detection-60)...(i_detection+60)]
+            let za_shot = self.z_acc[(i_detection-60)...(i_detection+60)]
+            print(zg_shot)
+            
+            
 
-                ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
 
-            }
+            ArrayOfSampleData2[0].append(contentsOf: xg_shot)
+            ArrayOfSampleData2[1].append(contentsOf: yg_shot)
+            ArrayOfSampleData2[2].append(contentsOf: zg_shot)
+            
+            ArrayOfSampleData2[3].append(contentsOf: xa_shot)
+            ArrayOfSampleData2[4].append(contentsOf: ya_shot)
+            ArrayOfSampleData2[5].append(contentsOf: za_shot)
+            
+            
+//            for j in (i_detection-60)...(i_detection+60) {
+//
+//                ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
+//
+//            }
             
             let encoded = try! JSONEncoder().encode(ArrayOfSampleData2)
             ArrayOfSampleData = String(data: encoded, encoding: .utf8)!

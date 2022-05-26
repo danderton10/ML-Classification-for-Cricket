@@ -102,6 +102,7 @@
 		52D5E3C21CF414E1001660B4 /* MotionTrackingWatchKitExtension.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MotionTrackingWatchKitExtension.entitlements; sourceTree = "<group>"; };
 		5F827A7B201BEA0800633D5A /* MotionTracking WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "MotionTracking WatchKit App.entitlements"; sourceTree = "<group>"; };
 		5F827A7D201BEA2200633D5A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		8F44F53A283F999D00A74043 /* ShotClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ShotClassifier.mlmodel; sourceTree = "<group>"; };
 		8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_Stats.swift; sourceTree = "<group>"; };
 		8FBEA509280F62B2008832F5 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +159,7 @@
 				52AFB39E1CEAD2D800BE33DC /* Assets.xcassets */,
 				52AFB3A01CEAD2D800BE33DC /* LaunchScreen.storyboard */,
 				52AFB3A31CEAD2D800BE33DC /* Info.plist */,
+				8F44F53A283F999D00A74043 /* ShotClassifier.mlmodel */,
 				52A8D69D1CF52A2400522498 /* MotionTrackingExtension.entitlements */,
 			);
 			path = MotionTracking;
