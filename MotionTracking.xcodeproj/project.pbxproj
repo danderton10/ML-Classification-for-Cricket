@@ -25,6 +25,7 @@
 		5F827A7E201BEA2200633D5A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F827A7D201BEA2200633D5A /* HealthKit.framework */; };
 		8F3968F8281C4AB9002637E6 /* SwingWatch WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 52AFB3B11CEAD2D800BE33DC /* SwingWatch WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8F44F53C283FA05B00A74043 /* ShotClassifier.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F53B283F9FCD00A74043 /* ShotClassifier.mlpackage */; };
+		8F44F53E2840F9C300A74043 /* FYP 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F53D2840F9C300A74043 /* FYP 1.mlmodel */; };
 		8FBEA506280F08BF008832F5 /* ViewController_Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */; };
 		8FBEA50A280F62B2008832F5 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBEA509280F62B2008832F5 /* TableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -104,6 +105,7 @@
 		5F827A7B201BEA0800633D5A /* MotionTracking WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "MotionTracking WatchKit App.entitlements"; sourceTree = "<group>"; };
 		5F827A7D201BEA2200633D5A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		8F44F53B283F9FCD00A74043 /* ShotClassifier.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = ShotClassifier.mlpackage; sourceTree = "<group>"; };
+		8F44F53D2840F9C300A74043 /* FYP 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "FYP 1.mlmodel"; sourceTree = "<group>"; };
 		8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_Stats.swift; sourceTree = "<group>"; };
 		8FBEA509280F62B2008832F5 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +163,7 @@
 				52AFB3A01CEAD2D800BE33DC /* LaunchScreen.storyboard */,
 				52AFB3A31CEAD2D800BE33DC /* Info.plist */,
 				8F44F53B283F9FCD00A74043 /* ShotClassifier.mlpackage */,
+				8F44F53D2840F9C300A74043 /* FYP 1.mlmodel */,
 				52A8D69D1CF52A2400522498 /* MotionTrackingExtension.entitlements */,
 			);
 			path = MotionTracking;
@@ -355,6 +358,7 @@
 				8F44F53C283FA05B00A74043 /* ShotClassifier.mlpackage in Sources */,
 				52AFB39A1CEAD2D800BE33DC /* ViewController.swift in Sources */,
 				52AFB3981CEAD2D800BE33DC /* AppDelegate.swift in Sources */,
+				8F44F53E2840F9C300A74043 /* FYP 1.mlmodel in Sources */,
 				8FBEA506280F08BF008832F5 /* ViewController_Stats.swift in Sources */,
 				8FBEA50A280F62B2008832F5 /* TableViewController.swift in Sources */,
 			);

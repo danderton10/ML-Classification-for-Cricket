@@ -50,29 +50,29 @@ class ViewController: UIViewController {
         // Must be the same value you used while training
         static let sensorsUpdateFrequency = 1.0 / 80.0
         static let hiddenInLength = 20
-        static let hiddenCellInLength = 200
+        static let hiddenCellInLength = 380
       }
     // Initialize the model, layers, and sensor data arrays
-      private let classifier = ShotClassifier()
+      private let classifier = FYP_1()
       private let modelName:String = "ShotClassifier"
     
     
-    let accX = try? MLMultiArray(
+    let accX_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
-    let accY = try? MLMultiArray(
+    let accY_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
-    let accZ = try? MLMultiArray(
+    let accZ_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
-    var rotX = try? MLMultiArray(
+    let rotX_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
-    let rotY = try? MLMultiArray(
+    let rotY_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
-    let rotZ = try? MLMultiArray(
+    let rotZ_final = try? MLMultiArray(
         shape: [ModelConstants.predictionWindowSize] as [NSNumber],
         dataType: MLMultiArrayDataType.double)
     var currentState = try? MLMultiArray(
@@ -80,10 +80,7 @@ class ViewController: UIViewController {
           ModelConstants.hiddenCellInLength) as NSNumber],
         dataType: MLMultiArrayDataType.double)
     
-    
-    
 
-    
     
     
     
@@ -121,59 +118,67 @@ class ViewController: UIViewController {
     func activityPrediction() {
         
         print (readFile)
-        
         print(readFile.count)
         
         let sep = readFile.components(separatedBy: ",")
-        
         print(sep.count)
         
         
         if (sep.count > 700) {
             
-            let rotX = sep[1...119]
-            let rotY = sep[122...240]
+            let rotX = sep[1...120]
+            let rotY = sep[123...242]
+            let rotZ = sep[245...364]
+            let accX = sep[367...486]
+            let accY = sep[489...608]
+            let accZ = sep[611...730]
             
             print(rotX)
             print(rotY)
             
-            let rotXedit = rotX.doubleArray
+            let rotX_edit = rotX.doubleArray
+            let rotY_edit = rotY.doubleArray
+            let rotZ_edit = rotZ.doubleArray
+            let accX_edit = accX.doubleArray
+            let accY_edit = accY.doubleArray
+            let accZ_edit = accZ.doubleArray
             
-            print(rotXedit)
+            print(rotX_edit)
+            print(rotX_edit.count)
+            
+            for j in (0...119) {
+                
+                self.rotX_final![j] = rotX_edit[j] as NSNumber
+                self.rotY_final![j] = rotY_edit[j] as NSNumber
+                self.rotZ_final![j] = rotZ_edit[j] as NSNumber
+                self.accX_final![j] = accX_edit[j] as NSNumber
+                self.accY_final![j] = accY_edit[j] as NSNumber
+                self.accZ_final![j] = accZ_edit[j] as NSNumber
+                
+            }
+            
+            print(rotX_final as Any)
             
         }
-        
-
-        
-//        let range = readFile.startIndex
-//        print(readFile[range])
-//
-//        let index = readFile.index(after: readFile.startIndex)
-//        print(readFile[index])
-        
-//        let text = readFile[0]
-        
-//        let decoded = try! JSONDecoder().decode([readFile].self, from: readFile)
-        
-        
-//        let testxacc = readFile[0...120]
-        
-        
-//      // Perform prediction
-//      let modelPrediction = try? classifier.prediction(
-//        acceleration_x: accX!,
-//        acceleration_y: accY!,
-//        acceleration_z: accZ!,
-//        gyro_x: rotX!,
-//        gyro_y: rotY!,
-//        gyro_z: rotZ!,
-//        stateIn: currentState!)
-//    // Update the state vector
-//      currentState = modelPrediction?.stateOut
-//    // Return the predicted activity
-//      return modelPrediction?.label
     }
     
+    
+    func activityPrediction2() -> String? {
+        
+      // Perform prediction
+      let modelPrediction = try? classifier.prediction(
+        acceleration_x: accX_final!,
+        acceleration_y: accY_final!,
+        acceleration_z: accZ_final!,
+        gyro_x: rotX_final!,
+        gyro_y: rotY_final!,
+        gyro_z: rotZ_final!,
+        stateIn: currentState!)
+    // Update the state vector
+      currentState = modelPrediction?.stateOut
+    // Return the predicted activity
+      return modelPrediction?.label
+    }
     
 }
 
@@ -210,7 +215,6 @@ extension ViewController: WCSessionDelegate {
             self.datasent.text = "Data Array Received"
             
             let fileName = "shot \(self.count)"
-            self.count = count + 1
             let documentDirectoryUrl = try! FileManager.default.url(
                for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true
             )
@@ -233,6 +237,14 @@ extension ViewController: WCSessionDelegate {
             
             activityPrediction()
             
+            if self.count > 1 {
+                
+                self.classlabel.text = self.activityPrediction2() ?? "N/A"
+                
+            }
+            
+                
+            self.count = count + 1
           }
 
     }
