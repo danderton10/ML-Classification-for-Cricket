@@ -10,6 +10,8 @@
 import UIKit
 import WatchConnectivity
 import os.log
+import CoreML
+
 
 class ViewController: UIViewController {
   
@@ -26,9 +28,65 @@ class ViewController: UIViewController {
     
     
     @IBOutlet weak var datasent: UILabel!
+    //    Initialize the label that will get updated
+    @IBOutlet weak var classlabel: UILabel!
 
     
     var count = 1
+    var readFile = ""
+    
+    
+    
+    
+    
+    
+    //MARK: CreateML framework set-up
+    
+    // Define some ML Model constants for the recurrent network
+      struct ModelConstants {
+        static let numOfFeatures = 6
+        // Must be the same value you used while training
+        static let predictionWindowSize = 120
+        // Must be the same value you used while training
+        static let sensorsUpdateFrequency = 1.0 / 80.0
+        static let hiddenInLength = 20
+        static let hiddenCellInLength = 200
+      }
+    // Initialize the model, layers, and sensor data arrays
+      private let classifier = ShotClassifier()
+      private let modelName:String = "ShotClassifier"
+    
+    
+    let accX = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    let accY = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    let accZ = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    var rotX = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    let rotY = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    let rotZ = try? MLMultiArray(
+        shape: [ModelConstants.predictionWindowSize] as [NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    var currentState = try? MLMultiArray(
+        shape: [(ModelConstants.hiddenInLength +
+          ModelConstants.hiddenCellInLength) as NSNumber],
+        dataType: MLMultiArrayDataType.double)
+    
+    
+    
+
+    
+    
+    
+    
 
     override func viewDidLoad() {
       super.viewDidLoad()
@@ -57,6 +115,63 @@ class ViewController: UIViewController {
             print(error)
             }
         )}
+    }
+    
+    
+    func activityPrediction() {
+        
+        print (readFile)
+        
+        print(readFile.count)
+        
+        let sep = readFile.components(separatedBy: ",")
+        
+        print(sep.count)
+        
+        
+        if (sep.count > 700) {
+            
+            let rotX = sep[1...119]
+            let rotY = sep[122...240]
+            
+            print(rotX)
+            print(rotY)
+            
+            let rotXedit = rotX.doubleArray
+            
+            print(rotXedit)
+            
+        }
+        
+
+        
+//        let range = readFile.startIndex
+//        print(readFile[range])
+//
+//        let index = readFile.index(after: readFile.startIndex)
+//        print(readFile[index])
+        
+//        let text = readFile[0]
+        
+//        let decoded = try! JSONDecoder().decode([readFile].self, from: readFile)
+        
+        
+//        let testxacc = readFile[0...120]
+        
+        
+//      // Perform prediction
+//      let modelPrediction = try? classifier.prediction(
+//        acceleration_x: accX!,
+//        acceleration_y: accY!,
+//        acceleration_z: accZ!,
+//        gyro_x: rotX!,
+//        gyro_y: rotY!,
+//        gyro_z: rotZ!,
+//        stateIn: currentState!)
+//    // Update the state vector
+//      currentState = modelPrediction?.stateOut
+//    // Return the predicted activity
+//      return modelPrediction?.label
     }
     
     
@@ -107,13 +222,16 @@ extension ViewController: WCSessionDelegate {
             } catch let error as NSError {
                print (error)
             }
-            var readFile = ""
+            
             do {
                readFile = try String(contentsOf: fileUrl)
             } catch let error as NSError {
                print(error)
             }
-            print (readFile)
+            
+//            self.classlabel.text = self.activityPrediction() ?? "N/A"
+            
+            activityPrediction()
             
           }
 
@@ -134,3 +252,15 @@ extension ViewController: WCSessionDelegate {
     }
     
 }
+
+
+extension Collection where Iterator.Element == String {
+    var doubleArray: [Double] {
+        return compactMap{ Double($0) }
+    }
+    var floatArray: [Float] {
+        return compactMap{ Float($0) }
+    }
+}
+
+

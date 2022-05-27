@@ -1,0 +1,39 @@
+{
+  "Outputs" : {
+    "label" : {
+      "MLFeatureShortDescription" : "Class label of top prediction"
+    },
+    "stateOut" : {
+      "MLFeatureShortDescription" : "LSTM state output"
+    },
+    "labelProbability" : {
+      "MLFeatureShortDescription" : "Activity prediction probabilities"
+    }
+  },
+  "Inputs" : {
+    "gyro_x" : {
+      "MLFeatureShortDescription" : "gyro_x window input"
+    },
+    "acceleration_y" : {
+      "MLFeatureShortDescription" : "acceleration_y window input"
+    },
+    "gyro_y" : {
+      "MLFeatureShortDescription" : "gyro_y window input"
+    },
+    "gyro_z" : {
+      "MLFeatureShortDescription" : "gyro_z window input"
+    },
+    "stateIn" : {
+      "MLFeatureShortDescription" : "LSTM state input"
+    },
+    "acceleration_z" : {
+      "MLFeatureShortDescription" : "acceleration_z window input"
+    },
+    "acceleration_x" : {
+      "MLFeatureShortDescription" : "acceleration_x window input"
+    }
+  },
+  "TrainingInputs" : {
+
+  }
+}

@@ -12,6 +12,7 @@ import CoreMotion
 import WatchKit
 import os.log
 import WatchConnectivity
+import CoreML
 /**
  `MotionManagerDelegate` exists to inform delegates of motion changes.
  These contexts can be used to enable application specific behavior.
@@ -64,12 +65,22 @@ class MotionManager {
     var recentDetection = false
     
     
-    var x_gyro = [Float]()
-    var y_gyro = [Float]()
-    var z_gyro = [Float]()
-    var x_acc = [Float]()
-    var y_acc = [Float]()
-    var z_acc = [Float]()
+//    var x_gyro = [Float]()
+//    var y_gyro = [Float]()
+//    var z_gyro = [Float]()
+//    var x_acc = [Float]()
+//    var y_acc = [Float]()
+//    var z_acc = [Float]()
+    
+    
+    
+    var x_gyro = [Double]()
+    var y_gyro = [Double]()
+    var z_gyro = [Double]()
+    var x_acc = [Double]()
+    var y_acc = [Double]()
+    var z_acc = [Double]()
+
     
     
     
@@ -132,12 +143,12 @@ class MotionManager {
                               deviceMotion.rotationRate.z)
         
         
-        self.x_gyro.append(Float(deviceMotion.rotationRate.x))
-        self.y_gyro.append(Float(deviceMotion.rotationRate.y))
-        self.z_gyro.append(Float(deviceMotion.rotationRate.z))
-        self.x_acc.append(Float(deviceMotion.userAcceleration.x))
-        self.y_acc.append(Float(deviceMotion.userAcceleration.y))
-        self.z_acc.append(Float(deviceMotion.userAcceleration.z))
+        self.x_gyro.append(Double(deviceMotion.rotationRate.x))
+        self.y_gyro.append(Double(deviceMotion.rotationRate.y))
+        self.z_gyro.append(Double(deviceMotion.rotationRate.z))
+        self.x_acc.append(Double(deviceMotion.userAcceleration.x))
+        self.y_acc.append(Double(deviceMotion.userAcceleration.y))
+        self.z_acc.append(Double(deviceMotion.userAcceleration.z))
         self.i += 1
         
         
@@ -164,7 +175,7 @@ class MotionManager {
             recentDetection = false
             magnitude_buffer.reset()
             
-            var ArrayOfSampleData2 = [[Float]](repeating: [Float](repeating: 0, count: 1), count: 6)
+            var ArrayOfSampleData2 = [[Double]](repeating: [Double](repeating: 0, count: 1), count: 6)
             
 
             
@@ -181,6 +192,19 @@ class MotionManager {
             let ya_shot = self.y_acc[(i_detection-60)...(i_detection+60)]
             let za_shot = self.z_acc[(i_detection-60)...(i_detection+60)]
             print(zg_shot)
+            
+            
+            
+//            for j in (i_detection-60)...(i_detection+60) {
+//
+//                rotX![j] = self.x_gyro[j] as NSNumber
+//                rotY![j] = self.y_gyro[j] as NSNumber
+//                rotZ![j] = self.z_gyro[j] as NSNumber
+//                accX![j] = self.x_acc[j] as NSNumber
+//                accY![j] = self.y_acc[j] as NSNumber
+//                accZ![j] = self.z_acc[j] as NSNumber
+//
+//            }
             
             
 

@@ -1,0 +1,24 @@
+{
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "43DB7B8B-3818-4649-99C9-E08C713FDA87": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "ShotClassifier.mlmodel",
+            "path": "com.apple.CoreML/ShotClassifier.mlmodel"
+        },
+        "5886CA67-CCE6-42DB-AA03-E16CBA4645D5": {
+            "author": "com.apple.CoreML",
+            "description": "External FeatureDescription Overlay",
+            "name": "FeatureDescriptions.json",
+            "path": "com.apple.CoreML/FeatureDescriptions.json"
+        },
+        "D8803E9C-66F6-4AA7-9D2E-1102A029D469": {
+            "author": "com.apple.CoreML",
+            "description": "External Metadata Overlay",
+            "name": "Metadata.json",
+            "path": "com.apple.CoreML/Metadata.json"
+        }
+    },
+    "rootModelIdentifier": "43DB7B8B-3818-4649-99C9-E08C713FDA87"
+}
