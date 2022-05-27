@@ -36,7 +36,11 @@ class ViewController: UIViewController {
     var readFile = ""
     
     
+    var shots = ["Start"]
     
+    
+    
+    @IBOutlet weak var ShotHistoryTable: UITableView!
     
     
     
@@ -87,6 +91,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
       super.viewDidLoad()
+        
+        ShotHistoryTable.delegate = self
+        ShotHistoryTable.dataSource = self
+        
       // Do any additional setup after loading the view.
       self.configureWatchKitSession()
     }
@@ -241,12 +249,18 @@ extension ViewController: WCSessionDelegate {
                 
                 self.classlabel.text = self.activityPrediction2() ?? "N/A"
                 
+                shots.append(self.activityPrediction2() ?? "N/A")
+                
             }
             
                 
             self.count = count + 1
-          }
+            
+            print(shots)
 
+            self.ShotHistoryTable.reloadData()
+            
+          }
     }
   }
     
@@ -273,6 +287,26 @@ extension Collection where Iterator.Element == String {
     var floatArray: [Float] {
         return compactMap{ Float($0) }
     }
+}
+
+
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("You selected \(shots[indexPath.row]).")
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return shots.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = ShotHistoryTable.dequeueReusableCell(withIdentifier: "ShotHistory", for: indexPath)
+        cell.textLabel?.text = shots[indexPath.row]
+        return cell
+    }
+    
 }
 
 
