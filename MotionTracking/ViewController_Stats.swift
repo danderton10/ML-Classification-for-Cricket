@@ -15,6 +15,7 @@ class ViewController_Stats: UIViewController, ChartViewDelegate {
     
     @IBOutlet weak var pieChart: PieChartView!
     @IBOutlet weak var barChart: BarChartView!
+    @IBOutlet weak var lineChart: LineChartView!
     
     
     var shots = ["Defensive", "Drive", "Drive", "Cut", "Defensive", "Drive", "Pull", "Pull", "Sweep"]
@@ -23,7 +24,7 @@ class ViewController_Stats: UIViewController, ChartViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         barChart.delegate = self
-        pieChart.delegate = self
+        lineChart.delegate = self
         
     }
     
@@ -44,62 +45,90 @@ class ViewController_Stats: UIViewController, ChartViewDelegate {
         barChart.data = data
         
         
-        var counts: [String: Int] = [:]
-        shots.forEach { counts[$0, default: 0] += 1 }
         
-        var names = [String]()
-        var values = [Int]()
+//        LINE CHART
         
-        for (key, value) in counts {
-            names.append(key)
-            values.append(value)
+        var line_entries = [BarChartDataEntry]()
+        
+        for x in 0...120 {
+            
+            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: Double(x)))
+            
         }
         
+        let set2 = LineChartDataSet(entries: line_entries)
+        set2.colors = ChartColorTemplates.material()
+        self.lineChart.legend.enabled = false
         
-        let defensiveDataEntry = PieChartDataEntry(value: 0)
-        let driveDataEntry = PieChartDataEntry(value: 0)
-        let cutDataEntry = PieChartDataEntry(value: 0)
-        let pullDataEntry = PieChartDataEntry(value: 0)
-        let sweepDataEntry = PieChartDataEntry(value: 0)
-        
-        var numberOfDownloadsDataEntries = [PieChartDataEntry]()
-            
-        pieChart.chartDescription.text = ""
-        
-        defensiveDataEntry.label = "Defensive"
-        let def_index = names.enumerated().filter{ $0.element == "Defensive"}.map{ $0.offset }
-        let val_def  = Double(values[def_index[0]])
-        defensiveDataEntry.value = val_def
-        
-        driveDataEntry.label = "Drive"
-        let drv_index = names.enumerated().filter{ $0.element == "Drive"}.map{ $0.offset }
-        let val_drv  = Double(values[drv_index[0]])
-        driveDataEntry.value = val_drv
-        
-        cutDataEntry.label = "Cut"
-        let cut_index = names.enumerated().filter{ $0.element == "Cut"}.map{ $0.offset }
-        let val_cut  = Double(values[cut_index[0]])
-        cutDataEntry.value = val_cut
-        
-        pullDataEntry.label = "Pull"
-        let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
-        let val_pll  = Double(values[pll_index[0]])
-        pullDataEntry.value = val_pll
-        
-        sweepDataEntry.label = "Sweep"
-        let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
-        let val_swp  = Double(values[swp_index[0]])
-        sweepDataEntry.value = val_swp
-        
-        numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
+        set2.drawCirclesEnabled = false;
+        set2.lineWidth = 5.5
+
+
+        lineChart.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
+        lineChart.drawMarkers = false
+        lineChart.rightAxis.enabled = false
+        lineChart.xAxis.labelPosition = .bottom
         
         
-        let chartDataSet = PieChartDataSet(entries: numberOfDownloadsDataEntries)
-        let chartData = PieChartData(dataSet: chartDataSet)
+        let data2 = LineChartData(dataSet: set2)
+        lineChart.data = data2
         
-        chartDataSet.colors = ChartColorTemplates.joyful()
-        pieChart.data = chartData
-        
+//        var counts: [String: Int] = [:]
+//        shots.forEach { counts[$0, default: 0] += 1 }
+//
+//        var names = [String]()
+//        var values = [Int]()
+//
+//        for (key, value) in counts {
+//            names.append(key)
+//            values.append(value)
+//        }
+//
+//
+//        let defensiveDataEntry = PieChartDataEntry(value: 0)
+//        let driveDataEntry = PieChartDataEntry(value: 0)
+//        let cutDataEntry = PieChartDataEntry(value: 0)
+//        let pullDataEntry = PieChartDataEntry(value: 0)
+//        let sweepDataEntry = PieChartDataEntry(value: 0)
+//
+//        var numberOfDownloadsDataEntries = [PieChartDataEntry]()
+//
+//        pieChart.chartDescription.text = ""
+//
+//        defensiveDataEntry.label = "Defensive"
+//        let def_index = names.enumerated().filter{ $0.element == "Defensive"}.map{ $0.offset }
+//        let val_def  = Double(values[def_index[0]])
+//        defensiveDataEntry.value = val_def
+//
+//        driveDataEntry.label = "Drive"
+//        let drv_index = names.enumerated().filter{ $0.element == "Drive"}.map{ $0.offset }
+//        let val_drv  = Double(values[drv_index[0]])
+//        driveDataEntry.value = val_drv
+//
+//        cutDataEntry.label = "Cut"
+//        let cut_index = names.enumerated().filter{ $0.element == "Cut"}.map{ $0.offset }
+//        let val_cut  = Double(values[cut_index[0]])
+//        cutDataEntry.value = val_cut
+//
+//        pullDataEntry.label = "Pull"
+//        let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
+//        let val_pll  = Double(values[pll_index[0]])
+//        pullDataEntry.value = val_pll
+//
+//        sweepDataEntry.label = "Sweep"
+//        let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
+//        let val_swp  = Double(values[swp_index[0]])
+//        sweepDataEntry.value = val_swp
+//
+//        numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
+//
+//
+//        let chartDataSet = PieChartDataSet(entries: numberOfDownloadsDataEntries)
+//        let chartData = PieChartData(dataSet: chartDataSet)
+//
+//        chartDataSet.colors = ChartColorTemplates.joyful()
+//        pieChart.data = chartData
+//
         
     }
 

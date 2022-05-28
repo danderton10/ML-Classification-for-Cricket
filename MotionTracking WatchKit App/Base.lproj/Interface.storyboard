@@ -43,16 +43,9 @@
                         <label alignment="left" text="0" id="5PT-2G-Dgg" userLabel="RotationValue">
                             <color key="textColor" red="0.085898444059999995" green="0.95968544479999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         </label>
-                        <label alignment="left" text="Display Message" id="HAi-J4-MpV"/>
-                        <button width="1" alignment="left" title="Send to iPhone" id="jCL-wR-4Qd">
-                            <connections>
-                                <action selector="tapSendToiPhone" destination="AgC-eL-Hgc" id="Qfq-cd-ghd"/>
-                            </connections>
-                        </button>
                     </items>
                     <connections>
                         <outlet property="gravityLabel" destination="MU2-hJ-tbM" id="5KU-li-kBk"/>
-                        <outlet property="label" destination="HAi-J4-MpV" id="3pc-EW-8UH"/>
                         <outlet property="rotationLabel" destination="5PT-2G-Dgg" id="AWR-Gi-B9r"/>
                         <outlet property="shotCountLabel" destination="R4A-xH-fs5" id="pV2-ff-imf"/>
                         <outlet property="titleLabel" destination="bWr-ao-gMO" id="tyd-Eb-0Hx"/>

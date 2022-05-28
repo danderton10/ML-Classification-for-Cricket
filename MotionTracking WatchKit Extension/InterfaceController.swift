@@ -36,7 +36,6 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     @IBOutlet weak var rotationLabel: WKInterfaceLabel!
     @IBOutlet weak var shotCountLabel: WKInterfaceLabel!
     @IBOutlet var message_test: WKInterfaceTextField!
-    @IBOutlet weak var label : WKInterfaceLabel!
     
     
     var isWorkingOut = false
@@ -95,10 +94,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     }
     
     
-    @IBAction func tapSendToiPhone() {
-      let data: [String: Any] = ["watch": "data from watch" as Any] //Create your dictionary as per uses
-      session.sendMessage(data, replyHandler: nil, errorHandler: nil)
-    }
+
     
     
     func shotCountonPhone() {
@@ -155,9 +151,9 @@ extension InterfaceController: WCSessionDelegate {
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     
     print("received data: \(message)")
-    if let value = message["iPhone"] as? String {//**7.1
-      self.label.setText(value)
-    }
+//    if let value = message["iPhone"] as? String {//**7.1
+//      self.label.setText(value)
+//    }
   }
     
 }

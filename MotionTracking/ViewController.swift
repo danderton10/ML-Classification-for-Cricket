@@ -24,7 +24,6 @@ class ViewController: UIViewController, ChartViewDelegate {
     // StatusLabel to display recording status of a session
     @IBOutlet weak var StatusLabel: UILabel!
     
-    @IBOutlet weak var label: UILabel!
     @IBOutlet weak var shotlabel: UILabel!
     
     
@@ -33,6 +32,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var classlabel: UILabel!
 
     @IBOutlet weak var pieChartshots: PieChartView!
+    @IBOutlet weak var lineChart: LineChartView!
     
     var count = 1
     var readFile = ""
@@ -44,6 +44,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     var sweepDataEntry = PieChartDataEntry(value: 0)
     
     var numberOfDownloadsDataEntries = [PieChartDataEntry]()
+    var line_entries = [BarChartDataEntry]()
     
     
 //    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
@@ -71,6 +72,13 @@ class ViewController: UIViewController, ChartViewDelegate {
     // Initialize the model, layers, and sensor data arrays
       private let classifier = FYP_1()
       private let modelName:String = "ShotClassifier"
+    
+    
+    var rotX_edit = [Double]()
+    
+    
+    
+    
     
     
     let accX_final = try? MLMultiArray(
@@ -108,13 +116,41 @@ class ViewController: UIViewController, ChartViewDelegate {
         ShotHistoryTable.dataSource = self
         
         pieChartshots.delegate = self
+        lineChart.delegate = self
         
       // Do any additional setup after loading the view.
       self.configureWatchKitSession()
         
         
         updateChartData()
+//        updateLineChart()
         
+        
+    }
+    
+    
+
+    func updateLineChart() {
+        
+        for x in 0...119 {
+            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
+        }
+        
+        let set2 = LineChartDataSet(entries: line_entries)
+        set2.colors = ChartColorTemplates.pastel()
+        self.lineChart.legend.enabled = false
+        set2.drawCirclesEnabled = false;
+        set2.lineWidth = 5.5
+        
+        
+        let data2 = LineChartData(dataSet: set2)
+        lineChart.data = data2
+        lineChart.noDataText = "You need to register a shot for this chart to display!"
+//        lineChart.backgroundColor = UIColor(red: 189/255, green: 195/255, blue: 199/255, alpha: 1)
+        lineChart.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
+        lineChart.drawMarkers = false
+        lineChart.rightAxis.enabled = false
+        lineChart.xAxis.labelPosition = .bottom
         
     }
     
@@ -194,17 +230,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     }
     
     
-    @IBAction func tapSendDataToWatch(_ sender: Any) {
-      
-      if let validSession = self.session, validSession.isReachable {
-          print("Hello")
-        let data: [String: Any] = ["iPhone": "Data from iPhone" as Any] // Create your Dictionay as per uses
-        validSession.sendMessage(data, replyHandler: nil, errorHandler: { error in
-            // catch any errors here
-            print(error)
-            }
-        )}
-    }
+
     
     
     func activityPrediction() {
@@ -228,7 +254,7 @@ class ViewController: UIViewController, ChartViewDelegate {
             print(rotX)
             print(rotY)
             
-            let rotX_edit = rotX.doubleArray
+            rotX_edit = rotX.doubleArray
             let rotY_edit = rotY.doubleArray
             let rotZ_edit = rotZ.doubleArray
             let accX_edit = accX.doubleArray
@@ -291,9 +317,9 @@ extension ViewController: WCSessionDelegate {
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     print("received message: \(message)")
       DispatchQueue.main.async { [self] in
-      if let shotcount = message["watch"] as? String {
-        self.label.text = shotcount
-      }
+//      if let shotcount = message["watch"] as? String {
+//        self.label.text = shotcount
+//      }
         if let value = message["count"] as? String {
           self.shotlabel.text = value
         }
@@ -335,6 +361,9 @@ extension ViewController: WCSessionDelegate {
                 
                 shots.append(self.activityPrediction2() ?? "N/A")
                 
+                updateChartData()
+                updateLineChart()
+                
             }
             
                 
@@ -344,7 +373,7 @@ extension ViewController: WCSessionDelegate {
 
             self.ShotHistoryTable.reloadData()
             
-            updateChartData()
+
             
           }
     }
