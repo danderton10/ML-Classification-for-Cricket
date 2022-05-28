@@ -11,9 +11,10 @@ import UIKit
 import WatchConnectivity
 import os.log
 import CoreML
+import Charts
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, ChartViewDelegate {
   
   var session: WCSession?
     
@@ -31,12 +32,23 @@ class ViewController: UIViewController {
     //    Initialize the label that will get updated
     @IBOutlet weak var classlabel: UILabel!
 
+    @IBOutlet weak var pieChartshots: PieChartView!
     
     var count = 1
     var readFile = ""
     
+    var defensiveDataEntry = PieChartDataEntry(value: 0)
+    var driveDataEntry = PieChartDataEntry(value: 0)
+    var cutDataEntry = PieChartDataEntry(value: 0)
+    var pullDataEntry = PieChartDataEntry(value: 0)
+    var sweepDataEntry = PieChartDataEntry(value: 0)
     
-    var shots = ["Start"]
+    var numberOfDownloadsDataEntries = [PieChartDataEntry]()
+    
+    
+//    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
+    
+    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
     
     
     
@@ -95,9 +107,81 @@ class ViewController: UIViewController {
         ShotHistoryTable.delegate = self
         ShotHistoryTable.dataSource = self
         
+        pieChartshots.delegate = self
+        
       // Do any additional setup after loading the view.
       self.configureWatchKitSession()
+        
+        
+        updateChartData()
+        
+        
     }
+    
+    
+    
+    func updateChartData() {
+        
+        
+        var counts: [String: Int] = [:]
+        shots.forEach { counts[$0, default: 0] += 1 }
+        
+        var names = [String]()
+        var values = [Int]()
+        
+        for (key, value) in counts {
+            names.append(key)
+            values.append(value)
+        }
+        
+           
+        pieChartshots.chartDescription.text = ""
+        
+        defensiveDataEntry.label = "Defensive"
+        let def_index = names.enumerated().filter{ $0.element == "Defensive"}.map{ $0.offset }
+        let val_def  = Double(values[def_index[0]]) - 1.0
+        defensiveDataEntry.value = val_def
+        
+        driveDataEntry.label = "Drive"
+        let drv_index = names.enumerated().filter{ $0.element == "Drive"}.map{ $0.offset }
+        let val_drv  = Double(values[drv_index[0]]) - 1.0
+        driveDataEntry.value = val_drv
+        
+        cutDataEntry.label = "Cut"
+        let cut_index = names.enumerated().filter{ $0.element == "Cut"}.map{ $0.offset }
+        let val_cut  = Double(values[cut_index[0]]) - 1.0
+        cutDataEntry.value = val_cut
+        
+        pullDataEntry.label = "Pull"
+        let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
+        let val_pll  = Double(values[pll_index[0]]) - 1.0
+        pullDataEntry.value = val_pll
+        
+        sweepDataEntry.label = "Sweep"
+        let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
+        let val_swp  = Double(values[swp_index[0]]) - 1.0
+        sweepDataEntry.value = val_swp
+        
+        numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
+        
+        
+        let chartDataSet = PieChartDataSet(entries: numberOfDownloadsDataEntries)
+        let chartData = PieChartData(dataSet: chartDataSet)
+        
+        self.pieChartshots.legend.enabled = false
+        
+        chartDataSet.colors = ChartColorTemplates.pastel()
+        pieChartshots.data = chartData
+        
+        
+        
+    }
+
+    
+    
+    
+    
+    
     
     // Configure Watch Connection
     func configureWatchKitSession() {
@@ -259,6 +343,8 @@ extension ViewController: WCSessionDelegate {
             print(shots)
 
             self.ShotHistoryTable.reloadData()
+            
+            updateChartData()
             
           }
     }
