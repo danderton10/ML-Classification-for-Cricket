@@ -7,4 +7,8 @@
  */
 import WatchKit
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate {}
+class ExtensionDelegate: NSObject, WKExtensionDelegate {
+    
+    var shotCount = 0
+    
+}

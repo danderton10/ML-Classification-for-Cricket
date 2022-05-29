@@ -43,6 +43,11 @@
                         <label alignment="left" text="0" id="5PT-2G-Dgg" userLabel="RotationValue">
                             <color key="textColor" red="0.085898444059999995" green="0.95968544479999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         </label>
+                        <button width="1" alignment="left" title="Reset Session" id="1Kd-v1-rOG">
+                            <connections>
+                                <action selector="tapSendToiPhone" destination="AgC-eL-Hgc" id="L6f-ST-YM3"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="gravityLabel" destination="MU2-hJ-tbM" id="5KU-li-kBk"/>

@@ -14,5 +14,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    var shots = ["Defensive", "Cut", "Drive"]
     
     var shots = [String]()
+    
+    var rotX_edit = [Double]()
+    var rotY_edit = [Double]()
+    var rotZ_edit = [Double]()
+    
+    var accX_edit = [Double]()
+    var accY_edit = [Double]()
+    var accZ_edit = [Double]()
 }
 

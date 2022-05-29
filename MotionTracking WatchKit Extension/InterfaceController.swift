@@ -14,6 +14,8 @@ import os.log
 
 class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     
+    let watchDelegate = WKExtension.shared().delegate as! ExtensionDelegate
+    
     // MARK: Properties
 
     let workoutManager = WorkoutManager()
@@ -25,7 +27,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     var userAccelStr = ""
     var rotationRateStr = ""
     var ArrayOfSampleData = String()
-    var shotCount = 0
+//    var shotCount = 0
 
 
     // MARK: Interface Properties
@@ -38,8 +40,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     @IBOutlet var message_test: WKInterfaceTextField!
     
     
-    var isWorkingOut = false
-    
+    var isWorkingOut = false    
     
     
     // MARK: Initialization
@@ -94,11 +95,26 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     }
     
     
+    @IBAction func tapSendToiPhone() {
+        
+        watchDelegate.shotCount = 0
+        
+        self.shotCountLabel.setText("Shot Count: \(watchDelegate.shotCount)")
+        
+//      self.shotCountLabel.setText("Shot Count: 0")
+        self.gravityLabel.setText("")
+        self.userAccelLabel.setText("")
+        self.rotationLabel.setText("")
+      let data: [String: Any] = ["watch": "data from watch" as Any] //Create your dictionary as per uses
+      session.sendMessage(data, replyHandler: nil, errorHandler: nil)
+    }
+    
+    
 
     
     
     func shotCountonPhone() {
-      let count: [String: Any] = ["count": "\(shotCount)" as Any] //Create your dictionary as per uses
+        let count: [String: Any] = ["count": "\(watchDelegate.shotCount)" as Any] //Create your dictionary as per uses
       let array: [String: Any] = ["array": "\(ArrayOfSampleData)" as Any]
       session.sendMessage(count, replyHandler: nil, errorHandler: nil)
         
@@ -121,7 +137,8 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     func didUpdateshotCount(_ manager: WorkoutManager, shotCount: Int, ArrayOfSampleData: String) {
         /// Serialize the property access and UI updates on the main queue.
         DispatchQueue.main.async {
-            self.shotCount = shotCount
+            
+            self.watchDelegate.shotCount = shotCount
             self.ArrayOfSampleData = ArrayOfSampleData
             self.updateLabels()
             self.shotCountonPhone()
@@ -135,7 +152,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
             gravityLabel.setText(gravityStr)
             userAccelLabel.setText(userAccelStr)
             rotationLabel.setText(rotationRateStr)
-            shotCountLabel.setText("Shot Count: \(shotCount)")
+            shotCountLabel.setText("Shot Count: \(watchDelegate.shotCount)")
         }
     }
 }

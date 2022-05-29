@@ -78,13 +78,13 @@ class ViewController: UIViewController, ChartViewDelegate {
       private let modelName:String = "ShotClassifier"
     
     
-    var rotX_edit = [Double]()
-    var rotY_edit = [Double]()
-    var rotZ_edit = [Double]()
-    
-    var accX_edit = [Double]()
-    var accY_edit = [Double]()
-    var accZ_edit = [Double]()
+//    var rotX_edit = [Double]()
+//    var rotY_edit = [Double]()
+//    var rotZ_edit = [Double]()
+//
+//    var accX_edit = [Double]()
+//    var accY_edit = [Double]()
+//    var accZ_edit = [Double]()
     
     
     
@@ -248,42 +248,42 @@ class ViewController: UIViewController, ChartViewDelegate {
     @IBAction func displayXAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accX_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accX_edit[x]))
         }
         updateLineChart(line_entries: line, name: "X Acceleration")
     }
     @IBAction func displayYAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accY_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accY_edit[x]))
         }
         updateLineChart(line_entries: line, name: "Y Acceleration")
     }
     @IBAction func displayZAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accZ_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accZ_edit[x]))
         }
         updateLineChart(line_entries: line, name: "Z Acceleration")
     }
     @IBAction func displayXGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
         }
         updateLineChart(line_entries: line, name: "X Rotation")
     }
     @IBAction func displayYGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotY_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotY_edit[x]))
         }
         updateLineChart(line_entries: line, name: "Y Rotation")
     }
     @IBAction func displayZGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotZ_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotZ_edit[x]))
         }
         updateLineChart(line_entries: line, name: "Z Rotation")
     }
@@ -326,24 +326,24 @@ class ViewController: UIViewController, ChartViewDelegate {
             print(rotX)
             print(rotY)
             
-            rotX_edit = rotX.doubleArray
-            rotY_edit = rotY.doubleArray
-            rotZ_edit = rotZ.doubleArray
-            accX_edit = accX.doubleArray
-            accY_edit = accY.doubleArray
-            accZ_edit = accZ.doubleArray
+            appDelegate.rotX_edit = rotX.doubleArray
+            appDelegate.rotY_edit = rotY.doubleArray
+            appDelegate.rotZ_edit = rotZ.doubleArray
+            appDelegate.accX_edit = accX.doubleArray
+            appDelegate.accY_edit = accY.doubleArray
+            appDelegate.accZ_edit = accZ.doubleArray
             
-            print(rotX_edit)
-            print(rotX_edit.count)
+//            print(rotX_edit)
+//            print(rotX_edit.count)
             
             for j in (0...119) {
                 
-                self.rotX_final![j] = rotX_edit[j] as NSNumber
-                self.rotY_final![j] = rotY_edit[j] as NSNumber
-                self.rotZ_final![j] = rotZ_edit[j] as NSNumber
-                self.accX_final![j] = accX_edit[j] as NSNumber
-                self.accY_final![j] = accY_edit[j] as NSNumber
-                self.accZ_final![j] = accZ_edit[j] as NSNumber
+                self.rotX_final![j] = appDelegate.rotX_edit[j] as NSNumber
+                self.rotY_final![j] = appDelegate.rotY_edit[j] as NSNumber
+                self.rotZ_final![j] = appDelegate.rotZ_edit[j] as NSNumber
+                self.accX_final![j] = appDelegate.accX_edit[j] as NSNumber
+                self.accY_final![j] = appDelegate.accY_edit[j] as NSNumber
+                self.accZ_final![j] = appDelegate.accZ_edit[j] as NSNumber
                 
             }
             
@@ -389,9 +389,14 @@ extension ViewController: WCSessionDelegate {
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     print("received message: \(message)")
       DispatchQueue.main.async { [self] in
-//      if let shotcount = message["watch"] as? String {
+          if (message["watch"] as? String) != nil {
+          
+          self.shotlabel.text = String(0)
+          appDelegate.shots.removeAll()
+          updateChartData()
+          
 //        self.label.text = shotcount
-//      }
+      }
         if let value = message["count"] as? String {
           self.shotlabel.text = value
         }
@@ -436,7 +441,7 @@ extension ViewController: WCSessionDelegate {
                 line_entries.removeAll()
                 
                 for x in 0...119 {
-                    line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
+                    line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
                 }
                 updateLineChart(line_entries: line_entries, name: "X Rotation")
                 

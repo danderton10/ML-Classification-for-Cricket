@@ -31,6 +31,9 @@ extension Date {
 
 
 class MotionManager {
+    
+    let watchDelegate = WKExtension.shared().delegate as! ExtensionDelegate
+    
     // MARK: Properties
     
     let motionManager = CMMotionManager()
@@ -58,7 +61,7 @@ class MotionManager {
     var ArrayOfSampleData = String()
     
     /// Shots counts
-    var shotCount = 0
+//    var shotCount = 0
     
     var i = 0
     var i_detection = 0
@@ -262,7 +265,7 @@ class MotionManager {
     func resetAllState() {
         magnitude_buffer.reset()
 
-        shotCount = 0
+        watchDelegate.shotCount = 0
         recentDetection = false
 
         updateShotDelegate()
@@ -270,21 +273,21 @@ class MotionManager {
     
     func incrementShotCountAndUpdateDelegate() {
         if (!recentDetection) {
-            shotCount += 1
+            watchDelegate.shotCount += 1
             
             recentDetection = true
 //            resetThreshold = 0
 
-            print("Updated Shot Count: \(shotCount)")
+            print("Updated Shot Count: \(watchDelegate.shotCount)")
             updateShotDelegate()
             
-            let applicationData = ["counterValue" : shotCount]
+            let applicationData = ["counterValue" : watchDelegate.shotCount]
             
         }
     }
 
     func updateShotDelegate() {
-        delegate?.didUpdateshotCount(self, shotCount: shotCount, ArrayOfSampleData: ArrayOfSampleData)
+        delegate?.didUpdateshotCount(self, shotCount: watchDelegate.shotCount, ArrayOfSampleData: ArrayOfSampleData)
     }
     
     
