@@ -27,6 +27,8 @@
 		8F44F53C283FA05B00A74043 /* ShotClassifier.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F53B283F9FCD00A74043 /* ShotClassifier.mlpackage */; };
 		8F44F53E2840F9C300A74043 /* FYP 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F53D2840F9C300A74043 /* FYP 1.mlmodel */; };
 		8F44F54028437B9100A74043 /* TableShowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F53F28437B9100A74043 /* TableShowViewController.swift */; };
+		8F44F5422843DBEB00A74043 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F5412843DBEB00A74043 /* HistoryTableViewController.swift */; };
+		8F44F5442843DC0000A74043 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F44F5432843DC0000A74043 /* HistoryViewController.swift */; };
 		8FBEA506280F08BF008832F5 /* ViewController_Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */; };
 		8FBEA50A280F62B2008832F5 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBEA509280F62B2008832F5 /* TableViewController.swift */; };
 		9844352F507B7555640A4E0D /* Pods_SwingWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DBAA74DAB8F11174C1C76DB /* Pods_SwingWatch.framework */; };
@@ -118,6 +120,8 @@
 		8F44F53B283F9FCD00A74043 /* ShotClassifier.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = ShotClassifier.mlpackage; sourceTree = "<group>"; };
 		8F44F53D2840F9C300A74043 /* FYP 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "FYP 1.mlmodel"; sourceTree = "<group>"; };
 		8F44F53F28437B9100A74043 /* TableShowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableShowViewController.swift; sourceTree = "<group>"; };
+		8F44F5412843DBEB00A74043 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		8F44F5432843DC0000A74043 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController_Stats.swift; sourceTree = "<group>"; };
 		8FBEA509280F62B2008832F5 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		9D0C9156F0B5BB3909552D6C /* Pods_SwingWatch_WatchKit_Extension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwingWatch_WatchKit_Extension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +187,8 @@
 				52AFB3991CEAD2D800BE33DC /* ViewController.swift */,
 				8FBEA505280F08BF008832F5 /* ViewController_Stats.swift */,
 				52AFB39B1CEAD2D800BE33DC /* Main.storyboard */,
+				8F44F5412843DBEB00A74043 /* HistoryTableViewController.swift */,
+				8F44F5432843DC0000A74043 /* HistoryViewController.swift */,
 				8F44F53F28437B9100A74043 /* TableShowViewController.swift */,
 				8FBEA509280F62B2008832F5 /* TableViewController.swift */,
 				52AFB39E1CEAD2D800BE33DC /* Assets.xcassets */,
@@ -491,11 +497,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F44F5422843DBEB00A74043 /* HistoryTableViewController.swift in Sources */,
 				8F44F53C283FA05B00A74043 /* ShotClassifier.mlpackage in Sources */,
 				8F44F54028437B9100A74043 /* TableShowViewController.swift in Sources */,
 				52AFB39A1CEAD2D800BE33DC /* ViewController.swift in Sources */,
 				52AFB3981CEAD2D800BE33DC /* AppDelegate.swift in Sources */,
 				8F44F53E2840F9C300A74043 /* FYP 1.mlmodel in Sources */,
+				8F44F5442843DC0000A74043 /* HistoryViewController.swift in Sources */,
 				8FBEA506280F08BF008832F5 /* ViewController_Stats.swift in Sources */,
 				8FBEA50A280F62B2008832F5 /* TableViewController.swift in Sources */,
 			);

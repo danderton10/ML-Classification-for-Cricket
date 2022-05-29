@@ -45,6 +45,8 @@ class ViewController: UIViewController, ChartViewDelegate {
     var line_entries = [BarChartDataEntry]()
     var graph = 0
     
+    var status = true
+    
     
     
     //MARK: CreateML framework set-up
@@ -200,7 +202,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         self.pieChartshots.legend.enabled = false
         
-        chartDataSet.colors = ChartColorTemplates.pastel()
+        chartDataSet.colors = ChartColorTemplates.joyful()
         pieChartshots.data = chartData
         pieChartshots.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
         
@@ -249,6 +251,32 @@ class ViewController: UIViewController, ChartViewDelegate {
         }
         updateLineChart(line_entries: line, name: "Z Rotation")
     }
+    
+
+    
+    
+    @IBAction func SaveSession(_ sender: Any) {
+        
+        let date = Date()
+        let formatter1 = DateFormatter()
+//        formatter1.dateStyle = .full
+        formatter1.dateFormat = "HH:mm E, d MMM y"
+        print(formatter1.string(from: date))
+        appDelegate.endtimes.append(formatter1.string(from: date))
+        
+        
+        let image = pieChartshots.getChartImage(transparent: false)!
+        
+        let string = image.toPngString() // it will convert UIImage to string
+
+        
+        appDelegate.image.append(string!)
+        
+        appDelegate.session_no += 1
+
+        
+    }
+    
 
 
     
@@ -356,6 +384,7 @@ extension ViewController: WCSessionDelegate {
           self.shotlabel.text = String(0)
           appDelegate.shots.removeAll()
           updateChartData()
+              status = true
       }
           
         if let value = message["count"] as? String {
@@ -363,9 +392,27 @@ extension ViewController: WCSessionDelegate {
         }
         if let value = message["on"] as? String {
           self.StatusLabel.text = value
+            
+            if status == true {
+                
+                let date = Date()
+                let formatter1 = DateFormatter()
+//                formatter1.dateStyle = .full
+                formatter1.dateFormat = "HH:mm E, d MMM y"
+                print(formatter1.string(from: date))
+                appDelegate.starttimes.append(formatter1.string(from: date))
+                
+            }
+            
+            status = false
+            
+
+            
+            
         }
         if let value = message["off"] as? String {
             self.StatusLabel.text = value
+            
           }
         if let value = message["array"] as? String {
 //            self.datasent.text = "Data Array Received"
@@ -391,22 +438,22 @@ extension ViewController: WCSessionDelegate {
             
             activityPrediction()
             
-            if self.count > 1 {
+//            if self.count > 1 {
                 
-                self.classlabel.text = self.activityPrediction2() ?? "N/A"
-                
-                appDelegate.shots.append(self.activityPrediction2() ?? "N/A")
-                
-                updateChartData()
-        
-                line_entries.removeAll()
-                
-                for x in 0...119 {
-                    line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
-                }
-                updateLineChart(line_entries: line_entries, name: "X Rotation")
-                
+            self.classlabel.text = self.activityPrediction2() ?? "N/A"
+            
+            appDelegate.shots.append(self.activityPrediction2() ?? "N/A")
+            
+            updateChartData()
+    
+            line_entries.removeAll()
+            
+            for x in 0...119 {
+                line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
             }
+            updateLineChart(line_entries: line_entries, name: "X Rotation")
+                
+//            }
             
             print(appDelegate.shots)
 
@@ -439,6 +486,24 @@ extension UILabel {
             let radians = CGFloat(CGFloat(Double.pi) * CGFloat(newValue) / CGFloat(180.0))
             self.transform = CGAffineTransform(rotationAngle: radians)
         }
+    }
+}
+
+
+extension Date {
+    var millisecondsSince1970:Int64 {
+        return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+}
+
+
+
+
+
+extension UIImage {
+    func toPngString() -> String? {
+        let data = self.pngData()
+        return data?.base64EncodedString(options: .endLineWithLineFeed)
     }
 }
 

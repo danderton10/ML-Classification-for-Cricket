@@ -27,7 +27,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     var userAccelStr = ""
     var rotationRateStr = ""
     var ArrayOfSampleData = String()
-//    var shotCount = 0
+    var isWorkingOut = false
 
 
     // MARK: Interface Properties
@@ -37,35 +37,27 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     @IBOutlet weak var userAccelLabel: WKInterfaceLabel!
     @IBOutlet weak var rotationLabel: WKInterfaceLabel!
     @IBOutlet weak var shotCountLabel: WKInterfaceLabel!
-    @IBOutlet var message_test: WKInterfaceTextField!
-    
-    
-    var isWorkingOut = false    
     
     
     // MARK: Initialization
     
     override init() {
         super.init()
-        
         workoutManager.delegate = self
     }
 
 
     override func awake(withContext context: Any?) {
       super.awake(withContext: context)
-      
       // Configure interface objects here.
       session.delegate = self
       session.activate()
     }
     
     
-    
     override func willActivate() {
         super.willActivate()
         active = true
-
         // On re-activation, update with the cached values.
         updateLabels()
     }
@@ -75,8 +67,6 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         active = false
     }
 
-    
-    
     
     @IBAction func SessionToggle() {
         isWorkingOut = !isWorkingOut 
@@ -100,8 +90,6 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         watchDelegate.shotCount = 0
         
         self.shotCountLabel.setText("Shot Count: \(watchDelegate.shotCount)")
-        
-//      self.shotCountLabel.setText("Shot Count: 0")
         self.gravityLabel.setText("")
         self.userAccelLabel.setText("")
         self.rotationLabel.setText("")
@@ -110,14 +98,10 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     }
     
     
-
-    
-    
     func shotCountonPhone() {
         let count: [String: Any] = ["count": "\(watchDelegate.shotCount)" as Any] //Create your dictionary as per uses
       let array: [String: Any] = ["array": "\(ArrayOfSampleData)" as Any]
       session.sendMessage(count, replyHandler: nil, errorHandler: nil)
-        
         session.sendMessage(array, replyHandler: nil, errorHandler: nil)
 
     }
@@ -159,18 +143,13 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
 
 
 
-
 extension InterfaceController: WCSessionDelegate {
   
   func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
   }
   
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-    
     print("received data: \(message)")
-//    if let value = message["iPhone"] as? String {//**7.1
-//      self.label.setText(value)
-//    }
   }
     
 }

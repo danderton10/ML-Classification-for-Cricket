@@ -68,15 +68,6 @@ class MotionManager {
     var recentDetection = false
     
     
-//    var x_gyro = [Float]()
-//    var y_gyro = [Float]()
-//    var z_gyro = [Float]()
-//    var x_acc = [Float]()
-//    var y_acc = [Float]()
-//    var z_acc = [Float]()
-    
-    
-    
     var x_gyro = [Double]()
     var y_gyro = [Double]()
     var z_gyro = [Double]()
@@ -84,12 +75,7 @@ class MotionManager {
     var y_acc = [Double]()
     var z_acc = [Double]()
 
-    
-    
-    
-    
-    
-    
+
 
     // MARK: Initialization
     
@@ -169,7 +155,6 @@ class MotionManager {
             incrementShotCountAndUpdateDelegate()
             
             i_detection = self.i
-
             
         }
         
@@ -180,7 +165,6 @@ class MotionManager {
             
             var ArrayOfSampleData2 = [[Double]](repeating: [Double](repeating: 0, count: 1), count: 6)
             
-
             
 //                for j in (i_detection-60)...(i_detection+60) {
 //
@@ -196,46 +180,19 @@ class MotionManager {
             let za_shot = self.z_acc[(i_detection-60)...(i_detection+60)]
             print(zg_shot)
             
-            
-            
-//            for j in (i_detection-60)...(i_detection+60) {
-//
-//                rotX![j] = self.x_gyro[j] as NSNumber
-//                rotY![j] = self.y_gyro[j] as NSNumber
-//                rotZ![j] = self.z_gyro[j] as NSNumber
-//                accX![j] = self.x_acc[j] as NSNumber
-//                accY![j] = self.y_acc[j] as NSNumber
-//                accZ![j] = self.z_acc[j] as NSNumber
-//
-//            }
-            
-            
-
 
             ArrayOfSampleData2[0].append(contentsOf: xg_shot)
             ArrayOfSampleData2[1].append(contentsOf: yg_shot)
             ArrayOfSampleData2[2].append(contentsOf: zg_shot)
-            
             ArrayOfSampleData2[3].append(contentsOf: xa_shot)
             ArrayOfSampleData2[4].append(contentsOf: ya_shot)
             ArrayOfSampleData2[5].append(contentsOf: za_shot)
             
             
-//            for j in (i_detection-60)...(i_detection+60) {
-//
-//                ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
-//
-//            }
-            
             let encoded = try! JSONEncoder().encode(ArrayOfSampleData2)
             ArrayOfSampleData = String(data: encoded, encoding: .utf8)!
             print(ArrayOfSampleData)  // "[-3.1415925025939941,0,3.1415925025939941,1.5,2.5]\n"
-//            let decoded = try! JSONDecoder().decode([ArrayOfSampleData2].self, from: encoded)  // [-3.141593, 0, 3.141593, 1.5, 2.5]
-            
-            
             print("Data Array Formulated")
-//            print(ArrayOfSampleData2)
-//            print("Data Array Printed");
                   
         }
         
@@ -258,7 +215,6 @@ class MotionManager {
 
     
     
-    
     // MARK: Data and Delegate Management
     
     
@@ -276,12 +232,10 @@ class MotionManager {
             watchDelegate.shotCount += 1
             
             recentDetection = true
-//            resetThreshold = 0
-
             print("Updated Shot Count: \(watchDelegate.shotCount)")
             updateShotDelegate()
             
-            let applicationData = ["counterValue" : watchDelegate.shotCount]
+//            let applicationData = ["counterValue" : watchDelegate.shotCount]
             
         }
     }

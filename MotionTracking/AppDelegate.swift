@@ -7,6 +7,7 @@
  */
 
 import UIKit
+import Charts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rotX_edit = [Double]()
     var rotY_edit = [Double]()
     var rotZ_edit = [Double]()
-    
     var accX_edit = [Double]()
     var accY_edit = [Double]()
     var accZ_edit = [Double]()
@@ -26,12 +26,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rotX_graph = [[Double]]()
     var rotY_graph = [[Double]]()
     var rotZ_graph = [[Double]]()
-    
     var accX_graph = [[Double]]()
     var accY_graph = [[Double]]()
     var accZ_graph = [[Double]]()
     
+    var session_no = 0
+    var starttimes = [String]()
+    var endtimes = [String]()
     
+    var image = [String]()
     
     
 }
