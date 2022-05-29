@@ -22,5 +22,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var accX_edit = [Double]()
     var accY_edit = [Double]()
     var accZ_edit = [Double]()
+    
+    var rotX_graph = [[Double]]()
+    var rotY_graph = [[Double]]()
+    var rotZ_graph = [[Double]]()
+    
+    var accX_graph = [[Double]]()
+    var accY_graph = [[Double]]()
+    var accZ_graph = [[Double]]()
+    
+    
+    
+    
 }
 

@@ -6,7 +6,6 @@
  This application's view controller.
  */
 
-
 import UIKit
 import WatchConnectivity
 import os.log
@@ -21,15 +20,12 @@ class ViewController: UIViewController, ChartViewDelegate {
   var session: WCSession?
     
     // IBOutlets to connect code to storyboard layout
-    // messageLabel to display data transfer status of a shot
-    @IBOutlet weak var messageLabel: UILabel!
     // StatusLabel to display recording status of a session
     @IBOutlet weak var StatusLabel: UILabel!
     
     @IBOutlet weak var shotlabel: UILabel!
     
     
-    @IBOutlet weak var datasent: UILabel!
     //    Initialize the label that will get updated
     @IBOutlet weak var classlabel: UILabel!
 
@@ -47,17 +43,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     var numberOfDownloadsDataEntries = [PieChartDataEntry]()
     var line_entries = [BarChartDataEntry]()
-    
-    
-//    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
-    
-//    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
-    
-//    var shots = [String]()
-    
-    
-    
-    @IBOutlet weak var ShotHistoryTable: UITableView!
+    var graph = 0
     
     
     
@@ -76,17 +62,6 @@ class ViewController: UIViewController, ChartViewDelegate {
     // Initialize the model, layers, and sensor data arrays
       private let classifier = FYP_1()
       private let modelName:String = "ShotClassifier"
-    
-    
-//    var rotX_edit = [Double]()
-//    var rotY_edit = [Double]()
-//    var rotZ_edit = [Double]()
-//
-//    var accX_edit = [Double]()
-//    var accY_edit = [Double]()
-//    var accZ_edit = [Double]()
-    
-    
     
     
     
@@ -115,15 +90,10 @@ class ViewController: UIViewController, ChartViewDelegate {
         dataType: MLMultiArrayDataType.double)
     
 
-    
-    
-    
+
 
     override func viewDidLoad() {
       super.viewDidLoad()
-        
-        ShotHistoryTable.delegate = self
-        ShotHistoryTable.dataSource = self
         
         pieChartshots.delegate = self
         lineChart.delegate = self
@@ -131,11 +101,7 @@ class ViewController: UIViewController, ChartViewDelegate {
       // Do any additional setup after loading the view.
       self.configureWatchKitSession()
         
-        
         updateChartData()
-//        updateLineChart()
-        
-        
     }
     
     
@@ -150,7 +116,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         self.lineChart.legend.horizontalAlignment = .left
         set2.drawCirclesEnabled = false;
         set2.lineWidth = 5.5
-        
         set2.drawValuesEnabled = false
         
         
@@ -170,7 +135,6 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     func updateChartData() {
         
-        
         var counts: [String: Int] = [:]
         appDelegate.shots.forEach { counts[$0, default: 0] += 1 }
         
@@ -182,7 +146,6 @@ class ViewController: UIViewController, ChartViewDelegate {
             values.append(value)
         }
         
-           
         pieChartshots.chartDescription.text = ""
         pieChartshots.noDataText = "You need to register a shot for this chart to display!"
         
@@ -239,8 +202,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         chartDataSet.colors = ChartColorTemplates.pastel()
         pieChartshots.data = chartData
-        
-        
+        pieChartshots.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
         
     }
 
@@ -301,9 +263,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     }
     }
     
-    
 
-    
     
     func activityPrediction() {
         
@@ -322,9 +282,7 @@ class ViewController: UIViewController, ChartViewDelegate {
             let accX = sep[367...486]
             let accY = sep[489...608]
             let accZ = sep[611...730]
-            
-            print(rotX)
-            print(rotY)
+
             
             appDelegate.rotX_edit = rotX.doubleArray
             appDelegate.rotY_edit = rotY.doubleArray
@@ -332,9 +290,7 @@ class ViewController: UIViewController, ChartViewDelegate {
             appDelegate.accX_edit = accX.doubleArray
             appDelegate.accY_edit = accY.doubleArray
             appDelegate.accZ_edit = accZ.doubleArray
-            
-//            print(rotX_edit)
-//            print(rotX_edit.count)
+    
             
             for j in (0...119) {
                 
@@ -348,6 +304,15 @@ class ViewController: UIViewController, ChartViewDelegate {
             }
             
             print(rotX_final as Any)
+            
+            appDelegate.rotX_graph.append(appDelegate.rotX_edit)
+            appDelegate.rotY_graph.append(appDelegate.rotY_edit)
+            appDelegate.rotZ_graph.append(appDelegate.rotZ_edit)
+            appDelegate.accX_graph.append(appDelegate.accX_edit)
+            appDelegate.accY_graph.append(appDelegate.accY_edit)
+            appDelegate.accZ_graph.append(appDelegate.accZ_edit)
+            
+            graph = graph + 1
             
         }
     }
@@ -377,14 +342,11 @@ class ViewController: UIViewController, ChartViewDelegate {
 // WCSession delegate functions
 extension ViewController: WCSessionDelegate {
   
-  func sessionDidBecomeInactive(_ session: WCSession) {
-  }
+  func sessionDidBecomeInactive(_ session: WCSession) {}
   
-  func sessionDidDeactivate(_ session: WCSession) {
-  }
+  func sessionDidDeactivate(_ session: WCSession) {}
   
-  func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-  }
+  func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
   
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     print("received message: \(message)")
@@ -394,9 +356,8 @@ extension ViewController: WCSessionDelegate {
           self.shotlabel.text = String(0)
           appDelegate.shots.removeAll()
           updateChartData()
-          
-//        self.label.text = shotcount
       }
+          
         if let value = message["count"] as? String {
           self.shotlabel.text = value
         }
@@ -407,7 +368,7 @@ extension ViewController: WCSessionDelegate {
             self.StatusLabel.text = value
           }
         if let value = message["array"] as? String {
-            self.datasent.text = "Data Array Received"
+//            self.datasent.text = "Data Array Received"
             
             let fileName = "shot \(self.count)"
             let documentDirectoryUrl = try! FileManager.default.url(
@@ -437,7 +398,7 @@ extension ViewController: WCSessionDelegate {
                 appDelegate.shots.append(self.activityPrediction2() ?? "N/A")
                 
                 updateChartData()
-                
+        
                 line_entries.removeAll()
                 
                 for x in 0...119 {
@@ -447,31 +408,14 @@ extension ViewController: WCSessionDelegate {
                 
             }
             
-            
             print(appDelegate.shots)
 
-            self.ShotHistoryTable.reloadData()
-            
+//            self.ShotHistoryTable.reloadData()
             self.count = count + 1
-            
-
-            
+        
           }
     }
   }
-    
-
-    
-    
-    
-    private func session(_ session: WCSession, didReceiveMessageData messageData: [Data : Any]) {
-      print("received data array: \(messageData)")
-      DispatchQueue.main.async {
-//        if let value = messageData["watch"] as? String {
-          self.datasent.text = "Data Array Received"
-        }
-//      }
-    }
     
 }
 
@@ -484,30 +428,6 @@ extension Collection where Iterator.Element == String {
         return compactMap{ Float($0) }
     }
 }
-
-
-
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("You selected \(appDelegate.shots[indexPath.row]).")
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return appDelegate.shots.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let tablecounter = Array(stride(from: 1, through: appDelegate.shots.count, by: 1))
-        
-        let cell = ShotHistoryTable.dequeueReusableCell(withIdentifier: "ShotHistory", for: indexPath)
-        cell.textLabel?.text = "Shot \(tablecounter[indexPath.row]): \(appDelegate.shots[indexPath.row])"
-        return cell
-    }
-    
-}
-
 
 
 extension UILabel {

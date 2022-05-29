@@ -32,8 +32,10 @@ class TableShowViewController: UIViewController {
         
         var line_entries = [BarChartDataEntry]()
         
+        let axis = appDelegate.rotX_graph[contactIndex]
+        
         for x in 0...119 {
-            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
+            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         
         updateLineChart(line_entries: line_entries, name: "X Rotation")
@@ -70,43 +72,51 @@ class TableShowViewController: UIViewController {
     
     @IBAction func displayXAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        
+        let axis = appDelegate.accX_graph[contactIndex]
+        
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accX_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "X Acceleration")
     }
     @IBAction func displayYAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        let axis = appDelegate.accY_graph[contactIndex]
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accY_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "Y Acceleration")
     }
     @IBAction func displayZAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        let axis = appDelegate.accZ_graph[contactIndex]
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.accZ_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "Z Acceleration")
     }
     @IBAction func displayXGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        let axis = appDelegate.rotX_graph[contactIndex]
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "X Rotation")
     }
     @IBAction func displayYGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        let axis = appDelegate.rotY_graph[contactIndex]
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotY_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "Y Rotation")
     }
     @IBAction func displayZGyro(_ sender: Any) {
         var line = [BarChartDataEntry]()
+        let axis = appDelegate.rotZ_graph[contactIndex]
         for x in 0...119 {
-            line.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotZ_edit[x]))
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
         updateLineChart(line_entries: line, name: "Z Rotation")
     }
