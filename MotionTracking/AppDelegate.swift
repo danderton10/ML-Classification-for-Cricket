@@ -11,5 +11,8 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+//    var shots = ["Defensive", "Cut", "Drive"]
+    
+    var shots = [String]()
 }
 

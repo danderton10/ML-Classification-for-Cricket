@@ -15,6 +15,8 @@ import Charts
 
 
 class ViewController: UIViewController, ChartViewDelegate {
+    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
   
   var session: WCSession?
     
@@ -49,7 +51,9 @@ class ViewController: UIViewController, ChartViewDelegate {
     
 //    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
     
-    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
+//    var shots = ["Drive", "Defensive", "Cut", "Pull", "Sweep"]
+    
+//    var shots = [String]()
     
     
     
@@ -75,6 +79,12 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     
     var rotX_edit = [Double]()
+    var rotY_edit = [Double]()
+    var rotZ_edit = [Double]()
+    
+    var accX_edit = [Double]()
+    var accY_edit = [Double]()
+    var accZ_edit = [Double]()
     
     
     
@@ -130,17 +140,18 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     
 
-    func updateLineChart() {
+    func updateLineChart(line_entries: [BarChartDataEntry], name: String) {
         
-        for x in 0...119 {
-            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
-        }
+        let set2 = LineChartDataSet(entries: line_entries, label: name)
         
-        let set2 = LineChartDataSet(entries: line_entries)
-        set2.colors = ChartColorTemplates.pastel()
-        self.lineChart.legend.enabled = false
+        set2.colors = [NSUIColor(red: CGFloat(80.0/255), green: CGFloat(33.0/255), blue: CGFloat(222.0/255), alpha: 1)]
+//        set2.colors = ChartColorTemplates.pastel()
+        self.lineChart.legend.verticalAlignment = .top
+        self.lineChart.legend.horizontalAlignment = .left
         set2.drawCirclesEnabled = false;
         set2.lineWidth = 5.5
+        
+        set2.drawValuesEnabled = false
         
         
         let data2 = LineChartData(dataSet: set2)
@@ -151,6 +162,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         lineChart.drawMarkers = false
         lineChart.rightAxis.enabled = false
         lineChart.xAxis.labelPosition = .bottom
+        lineChart.xAxis.drawLabelsEnabled = true
         
     }
     
@@ -160,7 +172,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         
         var counts: [String: Int] = [:]
-        shots.forEach { counts[$0, default: 0] += 1 }
+        appDelegate.shots.forEach { counts[$0, default: 0] += 1 }
         
         var names = [String]()
         var values = [Int]()
@@ -172,31 +184,50 @@ class ViewController: UIViewController, ChartViewDelegate {
         
            
         pieChartshots.chartDescription.text = ""
+        pieChartshots.noDataText = "You need to register a shot for this chart to display!"
         
         defensiveDataEntry.label = "Defensive"
         let def_index = names.enumerated().filter{ $0.element == "Defensive"}.map{ $0.offset }
-        let val_def  = Double(values[def_index[0]]) - 1.0
-        defensiveDataEntry.value = val_def
+        if def_index.count > 0 {
+            let val_def  = Double(values[def_index[0]])
+            defensiveDataEntry.value = val_def
+        }
+        else {defensiveDataEntry.value = 0}
         
         driveDataEntry.label = "Drive"
         let drv_index = names.enumerated().filter{ $0.element == "Drive"}.map{ $0.offset }
-        let val_drv  = Double(values[drv_index[0]]) - 1.0
-        driveDataEntry.value = val_drv
+        if drv_index.count > 0 {
+            let val_drv  = Double(values[drv_index[0]])
+            driveDataEntry.value = val_drv
+        }
+        else {driveDataEntry.value = 0}
         
         cutDataEntry.label = "Cut"
         let cut_index = names.enumerated().filter{ $0.element == "Cut"}.map{ $0.offset }
-        let val_cut  = Double(values[cut_index[0]]) - 1.0
-        cutDataEntry.value = val_cut
+        if cut_index.count > 0 {
+            let val_cut  = Double(values[cut_index[0]])
+            cutDataEntry.value = val_cut
+        }
+        else {cutDataEntry.value = 0}
+
         
         pullDataEntry.label = "Pull"
         let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
-        let val_pll  = Double(values[pll_index[0]]) - 1.0
-        pullDataEntry.value = val_pll
+        if pll_index.count > 0 {
+            let val_pll  = Double(values[pll_index[0]])
+            pullDataEntry.value = val_pll
+        }
+        else {pullDataEntry.value = 0}
+
         
         sweepDataEntry.label = "Sweep"
         let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
-        let val_swp  = Double(values[swp_index[0]]) - 1.0
-        sweepDataEntry.value = val_swp
+        if swp_index.count > 0 {
+            let val_swp  = Double(values[swp_index[0]])
+            sweepDataEntry.value = val_swp
+        }
+        else {sweepDataEntry.value = 0}
+
         
         numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
         
@@ -214,9 +245,50 @@ class ViewController: UIViewController, ChartViewDelegate {
     }
 
     
-    
-    
-    
+    @IBAction func displayXAcc(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accX_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "X Acceleration")
+    }
+    @IBAction func displayYAcc(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accY_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "Y Acceleration")
+    }
+    @IBAction func displayZAcc(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: accZ_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "Z Acceleration")
+    }
+    @IBAction func displayXGyro(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "X Rotation")
+    }
+    @IBAction func displayYGyro(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotY_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "Y Rotation")
+    }
+    @IBAction func displayZGyro(_ sender: Any) {
+        var line = [BarChartDataEntry]()
+        for x in 0...119 {
+            line.append(BarChartDataEntry(x: Double(x)/80.0, y: rotZ_edit[x]))
+        }
+        updateLineChart(line_entries: line, name: "Z Rotation")
+    }
+
+
     
     
     // Configure Watch Connection
@@ -255,11 +327,11 @@ class ViewController: UIViewController, ChartViewDelegate {
             print(rotY)
             
             rotX_edit = rotX.doubleArray
-            let rotY_edit = rotY.doubleArray
-            let rotZ_edit = rotZ.doubleArray
-            let accX_edit = accX.doubleArray
-            let accY_edit = accY.doubleArray
-            let accZ_edit = accZ.doubleArray
+            rotY_edit = rotY.doubleArray
+            rotZ_edit = rotZ.doubleArray
+            accX_edit = accX.doubleArray
+            accY_edit = accY.doubleArray
+            accZ_edit = accZ.doubleArray
             
             print(rotX_edit)
             print(rotX_edit.count)
@@ -351,27 +423,31 @@ extension ViewController: WCSessionDelegate {
                print(error)
             }
             
-//            self.classlabel.text = self.activityPrediction() ?? "N/A"
-            
             activityPrediction()
             
             if self.count > 1 {
                 
                 self.classlabel.text = self.activityPrediction2() ?? "N/A"
                 
-                shots.append(self.activityPrediction2() ?? "N/A")
+                appDelegate.shots.append(self.activityPrediction2() ?? "N/A")
                 
                 updateChartData()
-                updateLineChart()
+                
+                line_entries.removeAll()
+                
+                for x in 0...119 {
+                    line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: rotX_edit[x]))
+                }
+                updateLineChart(line_entries: line_entries, name: "X Rotation")
                 
             }
             
-                
-            self.count = count + 1
             
-            print(shots)
+            print(appDelegate.shots)
 
             self.ShotHistoryTable.reloadData()
+            
+            self.count = count + 1
             
 
             
@@ -409,19 +485,36 @@ extension Collection where Iterator.Element == String {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("You selected \(shots[indexPath.row]).")
+        print("You selected \(appDelegate.shots[indexPath.row]).")
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return shots.count
+        return appDelegate.shots.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let tablecounter = Array(stride(from: 1, through: appDelegate.shots.count, by: 1))
+        
         let cell = ShotHistoryTable.dequeueReusableCell(withIdentifier: "ShotHistory", for: indexPath)
-        cell.textLabel?.text = shots[indexPath.row]
+        cell.textLabel?.text = "Shot \(tablecounter[indexPath.row]): \(appDelegate.shots[indexPath.row])"
         return cell
     }
     
+}
+
+
+
+extension UILabel {
+    @IBInspectable
+    var rotation: Int {
+        get {
+            return 0
+        } set {
+            let radians = CGFloat(CGFloat(Double.pi) * CGFloat(newValue) / CGFloat(180.0))
+            self.transform = CGAffineTransform(rotationAngle: radians)
+        }
+    }
 }
 
 

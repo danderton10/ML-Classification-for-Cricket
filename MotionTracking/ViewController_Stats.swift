@@ -52,13 +52,15 @@ class ViewController_Stats: UIViewController, ChartViewDelegate {
         
         for x in 0...120 {
             
-            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: Double(x)))
+            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: Double(x), data: ["Time","Mag"]))
             
         }
         
-        let set2 = LineChartDataSet(entries: line_entries)
-        set2.colors = ChartColorTemplates.material()
-        self.lineChart.legend.enabled = false
+        let set2 = LineChartDataSet(entries: line_entries, label: "X Rotation")
+//        set2.colors = ChartColorTemplates.material()
+        
+        set2.colors = [NSUIColor(red: CGFloat(228.0/255), green: CGFloat(204.0/255), blue: CGFloat(88.0/255), alpha: 1)]
+//        self.lineChart.legend.enabled = false
         
         set2.drawCirclesEnabled = false;
         set2.lineWidth = 5.5
