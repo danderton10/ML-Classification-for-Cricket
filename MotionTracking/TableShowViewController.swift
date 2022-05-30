@@ -177,5 +177,15 @@ class TableShowViewController: UIViewController {
     }
 }
     
+    @IBAction func otherPressed(_ sender: Any) {
+        
+//        if appDelegate.shots[contactIndex] == "Sweep" {     // you should probably force everything to lowercase, to avoid wrong test
+//            accuracy.text = "Classification: Correct"
+//            appDelegate.percentaccuracy += 1
+//    } else {
+        accuracy.text = "Classification: Incorrect"
+//    }
+}
+    
 
 }
