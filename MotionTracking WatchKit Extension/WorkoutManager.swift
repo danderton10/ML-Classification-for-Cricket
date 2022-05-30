@@ -48,7 +48,19 @@ class WorkoutManager: MotionManagerDelegate {
         workoutConfiguration.locationType = .outdoor
 
         do {
+            let sampleType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
             session = try HKWorkoutSession(healthStore: healthStore, configuration: workoutConfiguration)
+            healthStore.enableBackgroundDelivery(for: sampleType!, frequency: .immediate, withCompletion: {(succeeded: Bool, error: Error!) in
+                if succeeded {
+                    print("Enabled background delivery")
+                }
+                else {
+                    if let theError = error {
+                        print("Error = \(theError)")
+                    }
+                }
+            } as (Bool, Error?) -> Void)
+
         } catch {
             fatalError("Unable to create the workout session!")
         }

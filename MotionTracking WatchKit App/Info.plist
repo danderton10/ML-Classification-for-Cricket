@@ -31,5 +31,9 @@
 	<string>com.example.apple-samplecode.SwingWatchDan</string>
 	<key>WKWatchKitApp</key>
 	<true/>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>App downloads content from the network</string>
+	</array>
 </dict>
 </plist>

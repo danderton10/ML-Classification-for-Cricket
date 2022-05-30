@@ -172,8 +172,9 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
         
         var line = [RadarChartDataEntry]()
         let axis = appDelegate.stats[shotSelected]
-        for x in 0...appDelegate.stats.count {
-            line.append(RadarChartDataEntry(value: axis[x]!))
+        print("Performance: \(axis)")
+        for x in 0...3 {
+            line.append(RadarChartDataEntry(value: axis[x]))
         }
         updateRadarChart(line_entries: line, name: "Shot \(shotSelected+1)")
         

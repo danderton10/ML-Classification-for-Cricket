@@ -265,10 +265,15 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         let c = Double(appDelegate.shots.count)
         
-        let acc = Double((Double(appDelegate.percentaccuracy/c))*100.0)
-        print(acc)
-        
-        appDelegate.overallaccuracy.append(Double(acc))
+        if appDelegate.percentaccuracy > 0.0 {
+            
+            let acc = Double((Double(appDelegate.percentaccuracy/c))*100.0)
+            print(acc)
+            
+            appDelegate.overallaccuracy.append(Double(acc))
+            
+        }
+        else {appDelegate.overallaccuracy.append(0.0)}
         
         
         let image = pieChartshots.getChartImage(transparent: false)!
@@ -278,7 +283,10 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         appDelegate.image.append(string!)
         
-        appDelegate.session_no += 1
+        
+        if appDelegate.shots.count > 0 {
+            appDelegate.session_no += 1
+        }
         
         appDelegate.stats.removeAll()
         appDelegate.accX_graph.removeAll()
@@ -292,6 +300,9 @@ class ViewController: UIViewController, ChartViewDelegate {
         print(appDelegate.shots)
         
         appDelegate.firstclick = true
+        
+        updateChartData()
+        self.shotlabel.text = String(0)
         
         if let validSession = self.session, validSession.isReachable {
             print("Hello")
@@ -369,7 +380,7 @@ class ViewController: UIViewController, ChartViewDelegate {
             
             
             
-            let features = [appDelegate.accZ_edit.max(),appDelegate.accZ_edit.max(),appDelegate.accX_edit.max(),appDelegate.accX_edit.max()]
+            let features = [appDelegate.accZ_edit.max()!,appDelegate.accZ_edit.max()!,appDelegate.accX_edit.max()!,appDelegate.accX_edit.max()!]
             
             appDelegate.stats.append(features)
             
@@ -526,6 +537,7 @@ extension ViewController: WCSessionDelegate {
             }
             
             print(appDelegate.shots)
+            print(appDelegate.stats)
 
 //            self.ShotHistoryTable.reloadData()
             self.count = count + 1
