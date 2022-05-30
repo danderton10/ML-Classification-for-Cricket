@@ -10,25 +10,27 @@ import UIKit
 
 class HistoryViewController: UIViewController {
     
-    var sessionIndex = 0
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     
+    // MARK: - Variables
     
     @IBOutlet weak var session: UILabel!
     @IBOutlet weak var duration: UILabel!
     @IBOutlet weak var durationend: UILabel!
     @IBOutlet weak var acc: UILabel!
     @IBOutlet weak var chart: UIImageView!
+//    @IBOutlet weak var shot: UILabel!
+    
+    var sessionIndex = 0
     
     
-    @IBOutlet weak var shot: UILabel!
+    // MARK: - Set Up
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let tablecounter = Array(stride(from: 1, through: appDelegate.session_no, by: 1))
-        
         
         session.text = "Session \(tablecounter[sessionIndex])"
         duration.text = "\(appDelegate.starttimes[sessionIndex])"
@@ -37,27 +39,12 @@ class HistoryViewController: UIViewController {
         chart.image = appDelegate.image[sessionIndex].toImage() // it will convert String  to UIImage
         
         acc.text = "Accuracy: \(appDelegate.overallaccuracy[sessionIndex]) %"
-        
-
-    }
-    
-    
-    func setImage(from url: String) {
-        guard let imageURL = URL(string: url) else { return }
-
-            // just not to cause a deadlock in UI!
-        DispatchQueue.global().async {
-            guard let imageData = try? Data(contentsOf: imageURL) else { return }
-
-            let image = UIImage(data: imageData)
-            DispatchQueue.main.async {
-                self.chart.image = image
-            }
-        }
     }
 
 }
 
+
+// MARK: - Image Extension
 
 extension String {
     func toImage() -> UIImage? {

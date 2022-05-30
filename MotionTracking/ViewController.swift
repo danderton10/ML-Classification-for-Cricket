@@ -17,23 +17,17 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
   
-  var session: WCSession?
+    var session: WCSession?
+    
+    //MARK: ViewController variables
     
     // IBOutlets to connect code to storyboard layout
-    // StatusLabel to display recording status of a session
     @IBOutlet weak var StatusLabel: UILabel!
-    
     @IBOutlet weak var shotlabel: UILabel!
-    
-    
-    //    Initialize the label that will get updated
     @IBOutlet weak var classlabel: UILabel!
-
     @IBOutlet weak var pieChartshots: PieChartView!
     @IBOutlet weak var lineChart: LineChartView!
     
-    var count = 1
-    var readFile = ""
     
     var defensiveDataEntry = PieChartDataEntry(value: 0)
     var driveDataEntry = PieChartDataEntry(value: 0)
@@ -43,11 +37,13 @@ class ViewController: UIViewController, ChartViewDelegate {
     
     var numberOfDownloadsDataEntries = [PieChartDataEntry]()
     var line_entries = [BarChartDataEntry]()
-    var graph = 0
     
+    var count = 1
+    var readFile = ""
+    var graph = 0
     var status = true
     
-    
+
     
     //MARK: CreateML framework set-up
     
@@ -56,7 +52,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         static let numOfFeatures = 6
         // Must be the same value you used while training
         static let predictionWindowSize = 120
-        // Must be the same value you used while training
         static let sensorsUpdateFrequency = 1.0 / 80.0
         static let hiddenInLength = 20
         static let hiddenCellInLength = 380
@@ -64,8 +59,6 @@ class ViewController: UIViewController, ChartViewDelegate {
     // Initialize the model, layers, and sensor data arrays
       private let classifier = FYP_1()
       private let modelName:String = "ShotClassifier"
-    
-    
     
     
     let accX_final = try? MLMultiArray(
@@ -92,28 +85,38 @@ class ViewController: UIViewController, ChartViewDelegate {
         dataType: MLMultiArrayDataType.double)
     
 
-
+    
+    //MARK: Set Up
 
     override func viewDidLoad() {
-      super.viewDidLoad()
+        super.viewDidLoad()
         
         pieChartshots.delegate = self
         lineChart.delegate = self
         
-      // Do any additional setup after loading the view.
-      self.configureWatchKitSession()
+        self.configureWatchKitSession()
         
         updateChartData()
     }
     
-    
+    // Configure Watch Connection
+    func configureWatchKitSession() {
 
+    if WCSession.isSupported() {
+      session = WCSession.default
+      session?.delegate = self
+      session?.activate()
+    }
+    }
+    
+    
+    //MARK: Chart Functions
+    
+    
     func updateLineChart(line_entries: [BarChartDataEntry], name: String) {
         
         let set2 = LineChartDataSet(entries: line_entries, label: name)
-        
         set2.colors = [NSUIColor(red: CGFloat(80.0/255), green: CGFloat(33.0/255), blue: CGFloat(222.0/255), alpha: 1)]
-//        set2.colors = ChartColorTemplates.pastel()
         self.lineChart.legend.verticalAlignment = .top
         self.lineChart.legend.horizontalAlignment = .left
         set2.drawCirclesEnabled = false;
@@ -132,7 +135,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         lineChart.xAxis.drawLabelsEnabled = true
         
     }
-    
     
     
     func updateChartData() {
@@ -175,7 +177,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         }
         else {cutDataEntry.value = 0}
 
-        
         pullDataEntry.label = "Pull"
         let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
         if pll_index.count > 0 {
@@ -184,7 +185,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         }
         else {pullDataEntry.value = 0}
 
-        
         sweepDataEntry.label = "Sweep"
         let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
         if swp_index.count > 0 {
@@ -196,17 +196,19 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
         
-        
         let chartDataSet = PieChartDataSet(entries: numberOfDownloadsDataEntries)
         let chartData = PieChartData(dataSet: chartDataSet)
         
         self.pieChartshots.legend.enabled = false
-        
         chartDataSet.colors = ChartColorTemplates.joyful()
         pieChartshots.data = chartData
         pieChartshots.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
         
     }
+    
+    
+    
+    //MARK: UI Button Functions
 
     
     @IBAction func displayXAcc(_ sender: Any) {
@@ -258,7 +260,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         let date = Date()
         let formatter1 = DateFormatter()
-//        formatter1.dateStyle = .full
         formatter1.dateFormat = "HH:mm E, d MMM y"
         print(formatter1.string(from: date))
         appDelegate.endtimes.append(formatter1.string(from: date))
@@ -266,12 +267,9 @@ class ViewController: UIViewController, ChartViewDelegate {
         let c = Double(appDelegate.shots.count)
         
         if appDelegate.percentaccuracy > 0.0 {
-            
             let acc = Double((Double(appDelegate.percentaccuracy/c))*100.0)
             print(acc)
-            
             appDelegate.overallaccuracy.append(Double(acc))
-            
         }
         else {appDelegate.overallaccuracy.append(0.0)}
         
@@ -279,10 +277,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         
         
         let image = pieChartshots.getChartImage(transparent: false)!
-        
         let string = image.toPngString() // it will convert UIImage to string
-
-        
         appDelegate.image.append(string!)
         
         
@@ -307,7 +302,6 @@ class ViewController: UIViewController, ChartViewDelegate {
         appDelegate.firstclick = true
         
         
-        
         updateChartData()
         self.shotlabel.text = String(0)
         
@@ -324,19 +318,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     
 
 
-    
-    
-    // Configure Watch Connection
-    func configureWatchKitSession() {
-
-    if WCSession.isSupported() {
-      session = WCSession.default
-      session?.delegate = self
-      session?.activate()
-    }
-    }
-    
-
+    //MARK: Predicition Functions
     
     func activityPrediction() {
         
@@ -356,7 +338,6 @@ class ViewController: UIViewController, ChartViewDelegate {
             let accY = sep[489...608]
             let accZ = sep[611...730]
 
-            
             appDelegate.rotX_edit = rotX.doubleArray
             appDelegate.rotY_edit = rotY.doubleArray
             appDelegate.rotZ_edit = rotZ.doubleArray
@@ -364,7 +345,6 @@ class ViewController: UIViewController, ChartViewDelegate {
             appDelegate.accY_edit = accY.doubleArray
             appDelegate.accZ_edit = accZ.doubleArray
     
-            
             for j in (0...119) {
                 
                 self.rotX_final![j] = appDelegate.rotX_edit[j] as NSNumber
@@ -386,14 +366,11 @@ class ViewController: UIViewController, ChartViewDelegate {
             appDelegate.accZ_graph.append(appDelegate.accZ_edit)
             
             
-            
             let features = [appDelegate.accZ_edit.max()!,appDelegate.accZ_edit.max()!,appDelegate.accX_edit.max()!,appDelegate.accX_edit.max()!]
             
             appDelegate.stats.append(features)
             
-            
             graph = graph + 1
-            
         }
     }
     
@@ -419,7 +396,10 @@ class ViewController: UIViewController, ChartViewDelegate {
 
 
 
-// WCSession delegate functions
+
+//MARK: Watch Session Delegate
+
+
 extension ViewController: WCSessionDelegate {
   
   func sessionDidBecomeInactive(_ session: WCSession) {}
@@ -433,22 +413,18 @@ extension ViewController: WCSessionDelegate {
       DispatchQueue.main.async { [self] in
           if (message["watch"] as? String) != nil {
           
-          self.shotlabel.text = String(0)
+              self.shotlabel.text = String(0)
               
-              
+
               let date = Date()
               let formatter1 = DateFormatter()
-      //        formatter1.dateStyle = .full
               formatter1.dateFormat = "HH:mm E, d MMM y"
               print(formatter1.string(from: date))
               appDelegate.endtimes.append(formatter1.string(from: date))
               
               
               let image = pieChartshots.getChartImage(transparent: false)!
-              
               let string = image.toPngString() // it will convert UIImage to string
-
-              
               appDelegate.image.append(string!)
               
               appDelegate.session_no += 1
@@ -466,46 +442,34 @@ extension ViewController: WCSessionDelegate {
               
               appDelegate.firstclick = true
               
-              
-              
-              
-              
-//          appDelegate.shots.removeAll()
-          updateChartData()
+              updateChartData()
               status = true
-      }
+          }
           
         if let value = message["count"] as? String {
           self.shotlabel.text = value
         }
+          
         if let value = message["on"] as? String {
           self.StatusLabel.text = value
             
             if status == true {
-                
                 let date = Date()
                 let formatter1 = DateFormatter()
-//                formatter1.dateStyle = .full
                 formatter1.dateFormat = "HH:mm E, d MMM y"
                 print(formatter1.string(from: date))
                 appDelegate.starttimes.append(formatter1.string(from: date))
-                
             }
             
             appDelegate.firstclick = true
-            
             status = false
-            
-
-            
-            
         }
+          
         if let value = message["off"] as? String {
             self.StatusLabel.text = value
-            
           }
+          
         if let value = message["array"] as? String {
-//            self.datasent.text = "Data Array Received"
             
             let fileName = "shot \(self.count)"
             let documentDirectoryUrl = try! FileManager.default.url(
@@ -542,13 +506,11 @@ extension ViewController: WCSessionDelegate {
                 line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: appDelegate.rotX_edit[x]))
             }
             updateLineChart(line_entries: line_entries, name: "X Rotation")
-                
             }
             
             print(appDelegate.shots)
             print(appDelegate.stats)
 
-//            self.ShotHistoryTable.reloadData()
             self.count = count + 1
         
           }
@@ -556,6 +518,10 @@ extension ViewController: WCSessionDelegate {
   }
     
 }
+
+
+
+//MARK: Other Extensions
 
 
 extension Collection where Iterator.Element == String {
@@ -586,9 +552,6 @@ extension Date {
         return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
     }
 }
-
-
-
 
 
 extension UIImage {

@@ -19,10 +19,9 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     // MARK: Properties
 
     let workoutManager = WorkoutManager()
-    var active = false
-    
     let session = WCSession.default
     
+    var active = false
     var gravityStr = ""
     var userAccelStr = ""
     var rotationRateStr = ""
@@ -46,14 +45,12 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         workoutManager.delegate = self
     }
 
-
     override func awake(withContext context: Any?) {
-      super.awake(withContext: context)
-      // Configure interface objects here.
-      session.delegate = self
-      session.activate()
+        super.awake(withContext: context)
+        // Configure interface objects here.
+        session.delegate = self
+        session.activate()
     }
-    
     
     override func willActivate() {
         super.willActivate()
@@ -66,7 +63,10 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         super.didDeactivate()
         active = false
     }
-
+    
+    
+    
+    // MARK: Button & Toggle functions
     
     @IBAction func SessionToggle() {
         isWorkingOut = !isWorkingOut 
@@ -75,15 +75,14 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
             workoutManager.startWorkout()
             let on: [String: Any] = ["on": "Tracking ..." as Any]
             session.sendMessage(on, replyHandler: nil, errorHandler: nil)
-            
-        } else {
+        }
+        else {
             titleLabel.setText("Stopped Recording")
             workoutManager.stopWorkout()
             let off: [String: Any] = ["off": "Stopped Recording" as Any]
             session.sendMessage(off, replyHandler: nil, errorHandler: nil)
         }
     }
-    
     
     @IBAction func tapSendToiPhone() {
         
@@ -93,21 +92,23 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         self.gravityLabel.setText("")
         self.userAccelLabel.setText("")
         self.rotationLabel.setText("")
-      let data: [String: Any] = ["watch": "data from watch" as Any] //Create your dictionary as per uses
-      session.sendMessage(data, replyHandler: nil, errorHandler: nil)
+        let data: [String: Any] = ["watch": "data from watch" as Any] //Create your dictionary as per uses
+        session.sendMessage(data, replyHandler: nil, errorHandler: nil)
     }
     
     
+    // MARK: Send Phone count
+    
     func shotCountonPhone() {
         let count: [String: Any] = ["count": "\(watchDelegate.shotCount)" as Any] //Create your dictionary as per uses
-      let array: [String: Any] = ["array": "\(ArrayOfSampleData)" as Any]
-      session.sendMessage(count, replyHandler: nil, errorHandler: nil)
+        let array: [String: Any] = ["array": "\(ArrayOfSampleData)" as Any]
+        session.sendMessage(count, replyHandler: nil, errorHandler: nil)
         session.sendMessage(array, replyHandler: nil, errorHandler: nil)
-
     }
     
     
     // MARK: WorkoutManagerDelegate
+    
     func didUpdateMotion(_ manager: WorkoutManager, gravityStr: String, rotationRateStr: String, userAccelStr: String) {
         DispatchQueue.main.async {
             self.gravityStr = gravityStr
@@ -117,11 +118,9 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
         }
     }
     
-    
     func didUpdateshotCount(_ manager: WorkoutManager, shotCount: Int, ArrayOfSampleData: String) {
         /// Serialize the property access and UI updates on the main queue.
         DispatchQueue.main.async {
-            
             self.watchDelegate.shotCount = shotCount
             self.ArrayOfSampleData = ArrayOfSampleData
             self.updateLabels()
@@ -131,6 +130,7 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
     
     
     // MARK: Convenience
+    
     func updateLabels() {
         if active {
             gravityLabel.setText(gravityStr)
@@ -143,21 +143,22 @@ class InterfaceController: WKInterfaceController, WorkoutManagerDelegate {
 
 
 
+// MARK: WCSession Delegate
+
 extension InterfaceController: WCSessionDelegate {
   
   func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
   }
   
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-    print("received data: \(message)")
+      print("received data: \(message)")
       if (message["iPhone"] as? String) != nil {
           watchDelegate.shotCount = 0
-          
+    
           self.shotCountLabel.setText("Shot Count: \(watchDelegate.shotCount)")
           self.gravityLabel.setText("")
           self.userAccelLabel.setText("")
           self.rotationLabel.setText("")
       }
   }
-    
 }

@@ -17,30 +17,31 @@ import HealthKit
 protocol WorkoutManagerDelegate: AnyObject {
     func didUpdateMotion(_ manager: WorkoutManager, gravityStr: String, rotationRateStr: String, userAccelStr: String)
     func didUpdateshotCount(_ manager: WorkoutManager, shotCount: Int, ArrayOfSampleData:String)
-    
 }
 
 class WorkoutManager: MotionManagerDelegate {
+    
     // MARK: Properties
+    
     let motionManager = MotionManager()
     let healthStore = HKHealthStore()
 
     weak var delegate: WorkoutManagerDelegate?
     var session: HKWorkoutSession?
 
+    
     // MARK: Initialization
     
     init() {
         motionManager.delegate = self
     }
 
+    
     // MARK: WorkoutManager
     
     func startWorkout() {
         // If we have already started the workout, then do nothing.
-        if (session != nil) {
-            return
-        }
+        if (session != nil) {return}
 
         // Configure the workout session.
         let workoutConfiguration = HKWorkoutConfiguration()
@@ -60,10 +61,8 @@ class WorkoutManager: MotionManagerDelegate {
                     }
                 }
             } as (Bool, Error?) -> Void)
-
-        } catch {
-            fatalError("Unable to create the workout session!")
         }
+        catch {fatalError("Unable to create the workout session!")}
 
         // Start the workout session and device motion updates.
         // healthStore.start(session!)
@@ -73,9 +72,7 @@ class WorkoutManager: MotionManagerDelegate {
 
     func stopWorkout() {
         // If we have already stopped the workout, then do nothing.
-        if (session == nil) {
-            return
-        }
+        if (session == nil) {return}
 
         // Stop the device motion updates and workout session.
         motionManager.stopUpdates()

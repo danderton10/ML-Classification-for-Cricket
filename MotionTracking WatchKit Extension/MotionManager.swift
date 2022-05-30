@@ -29,25 +29,21 @@ extension Date {
 }
 
 
-
 class MotionManager {
     
     let watchDelegate = WKExtension.shared().delegate as! ExtensionDelegate
     
-    // MARK: Properties
+    
+    // MARK: Properties & Constants
     
     let motionManager = CMMotionManager()
     let queue = OperationQueue()
     let wristLocationIsLeft = WKInterfaceDevice.current().wristLocation == .left
-    
     let session = WCSession.default
 
-    // MARK: Application Specific Constants
-    
     // These constants were derived from data and are tuned for the shot detection
     let accThreshold = 2.0 // Acceleration magnitude threshold (2g)
     var resetThreshold = 0.0 // counter variable to to ensure minimum distance in time between shots
-    
     
     // The app is using 80hz data and the buffer is going to hold 1.5s worth of data.
     let sampleInterval = 1.0 / 80
@@ -60,13 +56,9 @@ class MotionManager {
     var userAccelStr = ""
     var ArrayOfSampleData = String()
     
-    /// Shots counts
-//    var shotCount = 0
-    
     var i = 0
     var i_detection = 0
     var recentDetection = false
-    
     
     var x_gyro = [Double]()
     var y_gyro = [Double]()
@@ -85,6 +77,7 @@ class MotionManager {
         queue.name = "MotionManagerQueue"
     }
 
+    
     // MARK: Motion Manager
 
     func startUpdates() {
@@ -100,7 +93,6 @@ class MotionManager {
             if error != nil {
                 print("Encountered error: \(error!)")
             }
-
             if deviceMotion != nil {
                 self.processDeviceMotion(deviceMotion!)
             }
@@ -113,7 +105,6 @@ class MotionManager {
         }
     }
 
-    
     
     // MARK: Motion Processing
     
@@ -140,37 +131,22 @@ class MotionManager {
         self.z_acc.append(Double(deviceMotion.userAcceleration.z))
         self.i += 1
         
-        
-        
         let accmagnitude = sqrt(pow(deviceMotion.userAcceleration.x, 2) + pow(deviceMotion.userAcceleration.y, 2) + pow(deviceMotion.userAcceleration.z, 2))
         
         magnitude_buffer.addSample(accmagnitude)
 
-        if !magnitude_buffer.isFull() {
-            return
-        }
-        
+        if !magnitude_buffer.isFull() {return}
         
         if (accmagnitude > accThreshold) {
             incrementShotCountAndUpdateDelegate()
-            
             i_detection = self.i
-            
         }
-        
         
         if (recentDetection && self.i > i_detection+60) {
             recentDetection = false
             magnitude_buffer.reset()
             
             var ArrayOfSampleData2 = [[Double]](repeating: [Double](repeating: 0, count: 1), count: 6)
-            
-            
-//                for j in (i_detection-60)...(i_detection+60) {
-//
-//                    ArrayOfSampleData2.append([self.x_gyro[j],self.y_gyro[j],self.z_gyro[j],self.x_acc[j],self.y_acc[j],self.z_acc[j]])
-//
-//                }
             
             let xg_shot = self.x_gyro[(i_detection-60)...(i_detection+60)]
             let yg_shot = self.y_gyro[(i_detection-60)...(i_detection+60)]
@@ -179,7 +155,6 @@ class MotionManager {
             let ya_shot = self.y_acc[(i_detection-60)...(i_detection+60)]
             let za_shot = self.z_acc[(i_detection-60)...(i_detection+60)]
             print(zg_shot)
-            
 
             ArrayOfSampleData2[0].append(contentsOf: xg_shot)
             ArrayOfSampleData2[1].append(contentsOf: yg_shot)
@@ -191,10 +166,11 @@ class MotionManager {
             
             let encoded = try! JSONEncoder().encode(ArrayOfSampleData2)
             ArrayOfSampleData = String(data: encoded, encoding: .utf8)!
-            print(ArrayOfSampleData)  // "[-3.1415925025939941,0,3.1415925025939941,1.5,2.5]\n"
+            print(ArrayOfSampleData)
             print("Data Array Formulated")
-                  
+                
         }
+        
         
         let timestamp = Date().millisecondsSince1970
         
@@ -229,14 +205,11 @@ class MotionManager {
     
     func incrementShotCountAndUpdateDelegate() {
         if (!recentDetection) {
-            watchDelegate.shotCount += 1
             
+            watchDelegate.shotCount += 1
             recentDetection = true
             print("Updated Shot Count: \(watchDelegate.shotCount)")
             updateShotDelegate()
-            
-//            let applicationData = ["counterValue" : watchDelegate.shotCount]
-            
         }
     }
 

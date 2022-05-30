@@ -12,7 +12,6 @@ import Charts
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-//    var shots = ["Defensive", "Cut", "Drive"]
     
     var shots = [String]()
     
@@ -22,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var accX_edit = [Double]()
     var accY_edit = [Double]()
     var accZ_edit = [Double]()
-    
     var rotX_graph = [[Double]]()
     var rotY_graph = [[Double]]()
     var rotZ_graph = [[Double]]()
@@ -41,10 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var firstclick = true
     
     var percentaccuracy = 0.0
-    
     var overallaccuracy = [Double]()
-    
-    var save = false
     
     
 }

@@ -11,17 +11,18 @@ import Charts
 
 class TableShowViewController: UIViewController {
     
-    @IBOutlet weak var lineChart: LineChartView!
-    
-    
-    var contactIndex = 0
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
+    // MARK: - Variables
+    
+    @IBOutlet weak var lineChart: LineChartView!
     @IBOutlet weak var accuracy: UILabel!
-    
-    
-    
     @IBOutlet weak var shot: UILabel!
+    
+    var contactIndex = 0
+    
+
+    // MARK: - Set Up
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +30,6 @@ class TableShowViewController: UIViewController {
         let tablecounter = Array(stride(from: 1, through: appDelegate.shots.count, by: 1))
         
         shot.text = "Shot \(tablecounter[contactIndex]): \(appDelegate.shots[contactIndex])"
-
-//        shot.text = "Shot "appDelegate.shots[contactIndex]
         
         var line_entries = [BarChartDataEntry]()
         
@@ -43,20 +42,20 @@ class TableShowViewController: UIViewController {
         updateLineChart(line_entries: line_entries, name: "X Rotation")
     }
     
+    
+    
+    // MARK: - Line Chart Function
+    
     func updateLineChart(line_entries: [BarChartDataEntry], name: String) {
     
-        
         let set2 = LineChartDataSet(entries: line_entries, label: name)
         
         set2.colors = [NSUIColor(red: CGFloat(80.0/255), green: CGFloat(33.0/255), blue: CGFloat(222.0/255), alpha: 1)]
-//        set2.colors = ChartColorTemplates.pastel()
         self.lineChart.legend.verticalAlignment = .top
         self.lineChart.legend.horizontalAlignment = .left
         set2.drawCirclesEnabled = false;
         set2.lineWidth = 5.5
-        
         set2.drawValuesEnabled = false
-        
         
         let data2 = LineChartData(dataSet: set2)
         lineChart.data = data2
@@ -71,12 +70,11 @@ class TableShowViewController: UIViewController {
     }
     
     
+    // MARK: - Chart Button Functions
     
     @IBAction func displayXAcc(_ sender: Any) {
         var line = [BarChartDataEntry]()
-        
         let axis = appDelegate.accX_graph[contactIndex]
-        
         for x in 0...119 {
             line.append(BarChartDataEntry(x: Double(x)/80.0, y: axis[x]))
         }
@@ -125,16 +123,17 @@ class TableShowViewController: UIViewController {
     
     
     
+    // MARK: - Class Button Functions
+    
     @IBAction func cutPressed(_ sender: Any) {
         
         if appDelegate.shots[contactIndex] == "Cut" {     // you should probably force everything to lowercase, to avoid wrong test
             accuracy.text = "Classification: Correct"
             appDelegate.percentaccuracy += 1
             print("Real Shot Indicated: \(appDelegate.percentaccuracy)")
-    } else {
-        accuracy.text = "Classification: Incorrect"
+        }
+        else {accuracy.text = "Classification: Incorrect"}
     }
-}
     
     @IBAction func defensivePressed(_ sender: Any) {
         
@@ -142,50 +141,40 @@ class TableShowViewController: UIViewController {
             accuracy.text = "Classification: Correct"
             appDelegate.percentaccuracy += 1
             print("Real Shot Indicated: \(appDelegate.percentaccuracy)")
-    } else {
-        accuracy.text = "Classification: Incorrect"
+        }
+        else {accuracy.text = "Classification: Incorrect"}
     }
-}
     
     @IBAction func drivePressed(_ sender: Any) {
         
         if appDelegate.shots[contactIndex] == "Drive" {     // you should probably force everything to lowercase, to avoid wrong test
             accuracy.text = "Classification: Correct"
             appDelegate.percentaccuracy += 1
-    } else {
-        accuracy.text = "Classification: Incorrect"
+        }
+        else {accuracy.text = "Classification: Incorrect"}
     }
-}
     
     @IBAction func pullPressed(_ sender: Any) {
         
         if appDelegate.shots[contactIndex] == "Pull" {     // you should probably force everything to lowercase, to avoid wrong test
             accuracy.text = "Classification: Correct"
             appDelegate.percentaccuracy += 1
-    } else {
-        accuracy.text = "Classification: Incorrect"
+        }
+        else {accuracy.text = "Classification: Incorrect"}
     }
-}
     
     @IBAction func sweepPressed(_ sender: Any) {
         
         if appDelegate.shots[contactIndex] == "Sweep" {     // you should probably force everything to lowercase, to avoid wrong test
             accuracy.text = "Classification: Correct"
             appDelegate.percentaccuracy += 1
-    } else {
-        accuracy.text = "Classification: Incorrect"
+        }
+        else {accuracy.text = "Classification: Incorrect"}
     }
-}
     
     @IBAction func otherPressed(_ sender: Any) {
         
-//        if appDelegate.shots[contactIndex] == "Sweep" {     // you should probably force everything to lowercase, to avoid wrong test
-//            accuracy.text = "Classification: Correct"
-//            appDelegate.percentaccuracy += 1
-//    } else {
         accuracy.text = "Classification: Incorrect"
-//    }
-}
+    }
     
-
 }

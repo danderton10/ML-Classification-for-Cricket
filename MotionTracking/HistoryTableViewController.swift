@@ -11,20 +11,26 @@ import UIKit
 class HistoryTableViewController: UITableViewController {
 
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    // MARK: - Variables
+    
     var sessionSelected = 0
     @IBOutlet var tableview: UITableView!
     
+    
+    // MARK: - Set Up
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            tableview.reloadData()
-        }
+        super.viewDidAppear(animated)
+        tableview.reloadData()
+    }
 
-    // MARK: - Table view data source
+    
+    // MARK: - Table view functions
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -37,17 +43,14 @@ class HistoryTableViewController: UITableViewController {
     }
     
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Session History", for: indexPath)
         let tablecounter = Array(stride(from: 1, through: appDelegate.session_no, by: 1))
-        
         cell.textLabel?.text = "Session \(tablecounter[indexPath.row]): \(appDelegate.starttimes[indexPath.row])"
 
         return cell
     }
-    
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -56,8 +59,6 @@ class HistoryTableViewController: UITableViewController {
     }
     
  
-    
-
 
     // MARK: - Navigation
 
