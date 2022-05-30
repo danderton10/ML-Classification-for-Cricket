@@ -340,6 +340,13 @@ class ViewController: UIViewController, ChartViewDelegate {
             appDelegate.accY_graph.append(appDelegate.accY_edit)
             appDelegate.accZ_graph.append(appDelegate.accZ_edit)
             
+            
+            
+            let features = [appDelegate.accZ_edit.max(),appDelegate.accZ_edit.max(),appDelegate.accX_edit.max(),appDelegate.accX_edit.max()]
+            
+            appDelegate.stats.append(features)
+            
+            
             graph = graph + 1
             
         }

@@ -39,7 +39,7 @@ class HistoryTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Session History", for: indexPath)
         let tablecounter = Array(stride(from: 1, through: appDelegate.session_no, by: 1))
         
-        cell.textLabel?.text = "Session \(tablecounter[indexPath.row])"
+        cell.textLabel?.text = "Session \(tablecounter[indexPath.row]): \(appDelegate.starttimes[indexPath.row])"
 
         return cell
     }

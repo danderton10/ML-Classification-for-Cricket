@@ -10,129 +10,179 @@ import UIKit
 import WatchConnectivity
 import Charts
 
-class ViewController_Stats: UIViewController, ChartViewDelegate {
+class CellClass: UITableViewCell {
     
-    
-    @IBOutlet weak var pieChart: PieChartView!
-    @IBOutlet weak var barChart: BarChartView!
-    @IBOutlet weak var lineChart: LineChartView!
-    
-    
-    var shots = ["Defensive", "Drive", "Drive", "Cut", "Defensive", "Drive", "Pull", "Pull", "Sweep"]
+}
 
+class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDelegate, UITableViewDataSource {
+    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    @IBOutlet weak var btnSelectFruit: UIButton!
+    @IBOutlet weak var radarChart: RadarChartView!
+    
+    var contactIndex = 0
+    let transparentView = UIView()
+    let tableView = UITableView()
+    var shotSelected = 0
+    
+    var line_entries = [RadarChartDataEntry]()
+    
+    var selectedButton = UIButton()
+    var dataSource = [String]()
+    
+    var firstclick = true
+    
+    let subjects = ["English", "Math", "Physics", "Chemistry"]
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        barChart.delegate = self
-        lineChart.delegate = self
+        radarChart.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(CellClass.self, forCellReuseIdentifier: "Cell")
+        
+        let axis = appDelegate.stats[0]
+        
+        for x in 0...appDelegate.stats.count {
+            line_entries.append(RadarChartDataEntry(value: axis[x]!))
+        }
+        
+        updateRadarChart(line_entries: line_entries, dataPoints: subjects, name: "Shot 1")
+        
         
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    
+    func addTransparentView(frames: CGRect) {
+        let window = UIApplication.shared.keyWindow
+        transparentView.frame = window?.frame ?? self.view.frame
+        self.view.addSubview(transparentView)
+
+        tableView.frame = CGRect(x: frames.origin.x, y: frames.origin.y + frames.height, width: frames.width, height: 0)
+        self.view.addSubview(tableView)
+        tableView.layer.cornerRadius = 5
+
+        transparentView.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+        tableView.reloadData()
+        let tapgesture = UITapGestureRecognizer(target: self, action: #selector(removeTransparentView))
+        transparentView.addGestureRecognizer(tapgesture)
+        transparentView.alpha = 0
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+            self.transparentView.alpha = 0.5
+            self.tableView.frame = CGRect(x: frames.origin.x, y: frames.origin.y + frames.height + 5, width: frames.width, height: CGFloat(self.dataSource.count * 50))
+        }, completion: nil)
+    }
+
+    @objc func removeTransparentView() {
+        let frames = selectedButton.frame
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+            self.transparentView.alpha = 0
+            self.tableView.frame = CGRect(x: frames.origin.x, y: frames.origin.y + frames.height, width: frames.width, height: 0)
+        }, completion: nil)
+    }
+
+    @IBAction func onClickSelectFruit(_ sender: Any) {
         
-        var entries = [BarChartDataEntry]()
-        
-        for x in 0..<10 {
+        if firstclick == true {
             
-            entries.append(BarChartDataEntry(x: Double(x), y: Double(x)))
+            for x in 1...appDelegate.shots.count {
+                dataSource.append("Shot \(x)")
+            }
             
         }
         
-        let set = BarChartDataSet(entries: entries)
+        selectedButton = btnSelectFruit
+        addTransparentView(frames: btnSelectFruit.frame)
+        
+        firstclick = false
+    }
+
+    
+
+    func updateRadarChart(line_entries: [RadarChartDataEntry], dataPoints: [String], name: String) {
+        
+        let set = RadarChartDataSet(entries: line_entries, label: name)
         set.colors = ChartColorTemplates.pastel()
-        let data = BarChartData(dataSet: set)
-        barChart.data = data
+        let data = RadarChartData(dataSet: set)
+        radarChart.data = data
         
-        
-        
-//        LINE CHART
-        
-        var line_entries = [BarChartDataEntry]()
-        
-        for x in 0...120 {
-            
-            line_entries.append(BarChartDataEntry(x: Double(x)/80.0, y: Double(x), data: ["Time","Mag"]))
-            
-        }
-        
-        let set2 = LineChartDataSet(entries: line_entries, label: "X Rotation")
-//        set2.colors = ChartColorTemplates.material()
-        
-        set2.colors = [NSUIColor(red: CGFloat(228.0/255), green: CGFloat(204.0/255), blue: CGFloat(88.0/255), alpha: 1)]
-//        self.lineChart.legend.enabled = false
-        
-        set2.drawCirclesEnabled = false;
-        set2.lineWidth = 5.5
+        set.lineWidth = 2
 
+        // 2
+        let redColor = UIColor(red: 247/255, green: 67/255, blue: 115/255, alpha: 1)
+        let redFillColor = UIColor(red: 247/255, green: 67/255, blue: 115/255, alpha: 0.6)
+        set.colors = [redColor]
+        set.fillColor = redFillColor
+        set.drawFilledEnabled = true
+        set.drawValuesEnabled = false
+        
+        
+        // 2
+        radarChart.webLineWidth = 1.5
+        radarChart.innerWebLineWidth = 1.5
+        radarChart.webColor = .lightGray
+        radarChart.innerWebColor = .lightGray
 
-        lineChart.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .easeInBounce)
-        lineChart.drawMarkers = false
-        lineChart.rightAxis.enabled = false
-        lineChart.xAxis.labelPosition = .bottom
+        // 3
+        let xAxis = radarChart.xAxis
+        xAxis.labelFont = .systemFont(ofSize: 9, weight: .bold)
+        xAxis.labelTextColor = .black
+        xAxis.xOffset = 10
+        xAxis.yOffset = 10
+        
+        let array = ["a","b","c","e"]
+        xAxis.valueFormatter = IndexAxisValueFormatter(values: array)
+
+        // 4
+        let yAxis = radarChart.yAxis
+        yAxis.labelFont = .systemFont(ofSize: 9, weight: .light)
+        yAxis.labelCount = 6
+        yAxis.drawTopYLabelEntryEnabled = false
+        yAxis.axisMinimum = 0
+
+        // 5
+        radarChart.legend.enabled = true
+        
+        radarChart.xAxis.drawLabelsEnabled = false
         
         
-        let data2 = LineChartData(dataSet: set2)
-        lineChart.data = data2
-        
-//        var counts: [String: Int] = [:]
-//        shots.forEach { counts[$0, default: 0] += 1 }
-//
-//        var names = [String]()
-//        var values = [Int]()
-//
-//        for (key, value) in counts {
-//            names.append(key)
-//            values.append(value)
-//        }
-//
-//
-//        let defensiveDataEntry = PieChartDataEntry(value: 0)
-//        let driveDataEntry = PieChartDataEntry(value: 0)
-//        let cutDataEntry = PieChartDataEntry(value: 0)
-//        let pullDataEntry = PieChartDataEntry(value: 0)
-//        let sweepDataEntry = PieChartDataEntry(value: 0)
-//
-//        var numberOfDownloadsDataEntries = [PieChartDataEntry]()
-//
-//        pieChart.chartDescription.text = ""
-//
-//        defensiveDataEntry.label = "Defensive"
-//        let def_index = names.enumerated().filter{ $0.element == "Defensive"}.map{ $0.offset }
-//        let val_def  = Double(values[def_index[0]])
-//        defensiveDataEntry.value = val_def
-//
-//        driveDataEntry.label = "Drive"
-//        let drv_index = names.enumerated().filter{ $0.element == "Drive"}.map{ $0.offset }
-//        let val_drv  = Double(values[drv_index[0]])
-//        driveDataEntry.value = val_drv
-//
-//        cutDataEntry.label = "Cut"
-//        let cut_index = names.enumerated().filter{ $0.element == "Cut"}.map{ $0.offset }
-//        let val_cut  = Double(values[cut_index[0]])
-//        cutDataEntry.value = val_cut
-//
-//        pullDataEntry.label = "Pull"
-//        let pll_index = names.enumerated().filter{ $0.element == "Pull"}.map{ $0.offset }
-//        let val_pll  = Double(values[pll_index[0]])
-//        pullDataEntry.value = val_pll
-//
-//        sweepDataEntry.label = "Sweep"
-//        let swp_index = names.enumerated().filter{ $0.element == "Sweep"}.map{ $0.offset }
-//        let val_swp  = Double(values[swp_index[0]])
-//        sweepDataEntry.value = val_swp
-//
-//        numberOfDownloadsDataEntries = [defensiveDataEntry, driveDataEntry, cutDataEntry, pullDataEntry, sweepDataEntry]
-//
-//
-//        let chartDataSet = PieChartDataSet(entries: numberOfDownloadsDataEntries)
-//        let chartData = PieChartData(dataSet: chartDataSet)
-//
-//        chartDataSet.colors = ChartColorTemplates.joyful()
-//        pieChart.data = chartData
-//
         
     }
 
+
+
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = dataSource[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        selectedButton.setTitle(dataSource[indexPath.row], for: .normal)
+        removeTransparentView()
+        
+        shotSelected = indexPath.row
+        
+        var line = [RadarChartDataEntry]()
+        let axis = appDelegate.stats[shotSelected]
+        for x in 0...appDelegate.stats.count {
+            line.append(RadarChartDataEntry(value: axis[x]!))
+        }
+        updateRadarChart(line_entries: line, dataPoints: subjects, name: "Shot \(shotSelected+1)")
+        
+        
+        
+    }
 
 }

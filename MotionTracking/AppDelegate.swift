@@ -30,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var accY_graph = [[Double]]()
     var accZ_graph = [[Double]]()
     
+    var stats = [[Double?]]()
+    
     var session_no = 0
     var starttimes = [String]()
     var endtimes = [String]()

@@ -28,6 +28,7 @@ class HistoryViewController: UIViewController {
         
         let tablecounter = Array(stride(from: 1, through: appDelegate.session_no, by: 1))
         
+        
         session.text = "Session \(tablecounter[sessionIndex])"
         duration.text = "\(appDelegate.starttimes[sessionIndex])"
         durationend.text = "\(appDelegate.endtimes[sessionIndex])"

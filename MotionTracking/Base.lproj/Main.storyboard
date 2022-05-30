@@ -21,22 +21,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Shot Statistics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gyD-c5-7jP">
-                                <rect key="frame" x="35" y="52" width="344" height="35"/>
+                                <rect key="frame" x="35" y="52" width="313" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Rockwell-Regular" family="Rockwell" pointSize="31"/>
                                 <color key="textColor" red="0.33333334329999997" green="0.055044422789999999" blue="0.04620728508" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7x-yu-l7v" customClass="BarChartView" customModule="Charts">
-                                <rect key="frame" x="35" y="105" width="344" height="301"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7x-yu-l7v" customClass="RadarChartView" customModule="Charts">
+                                <rect key="frame" x="35" y="252" width="313" height="349"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eC1-Dn-zBc" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="35" y="426" width="344" height="301"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZ1-hH-e9B">
+                                <rect key="frame" x="35" y="103" width="313" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemIndigoColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Select Shot">
+                                    <fontDescription key="titleFontDescription" style="UICTFontTextStyleTitle2"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="onClickSelectFruit:" destination="IGz-d5-3DG" eventType="touchUpInside" id="c6g-Lr-JJM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90477002870142686" green="0.98673537234042552" blue="0.87305241024862601" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
@@ -44,13 +52,13 @@
                         <color key="badgeColor" red="1" green="0.86873543149999999" blue="0.86863978549999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </tabBarItem>
                     <connections>
-                        <outlet property="barChart" destination="x7x-yu-l7v" id="iD7-bU-tsq"/>
-                        <outlet property="lineChart" destination="eC1-Dn-zBc" id="rPH-LI-ftn"/>
+                        <outlet property="btnSelectFruit" destination="qZ1-hH-e9B" id="Oo9-fq-CYR"/>
+                        <outlet property="radarChart" destination="x7x-yu-l7v" id="bxN-yr-rga"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RxJ-DF-xqY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1467" y="-504"/>
+            <point key="canvasLocation" x="1466.6666666666667" y="-504.24107142857139"/>
         </scene>
         <!--Session History-->
         <scene sceneID="rGx-Qj-NCT">
@@ -68,6 +76,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.62208310870000005" green="0.85916549409999998" blue="0.88233599289999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -616,6 +625,9 @@
         <image name="homekit" catalog="system" width="128" height="106"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
