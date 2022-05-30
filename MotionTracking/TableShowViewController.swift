@@ -17,6 +17,8 @@ class TableShowViewController: UIViewController {
     var contactIndex = 0
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
+    @IBOutlet weak var accuracy: UILabel!
+    
     
     
     @IBOutlet weak var shot: UILabel!
@@ -120,6 +122,60 @@ class TableShowViewController: UIViewController {
         }
         updateLineChart(line_entries: line, name: "Z Rotation")
     }
+    
+    
+    
+    @IBAction func cutPressed(_ sender: Any) {
+        
+        if appDelegate.shots[contactIndex] == "Cut" {     // you should probably force everything to lowercase, to avoid wrong test
+            accuracy.text = "Classification: Correct"
+            appDelegate.percentaccuracy += 1
+            print("Real Shot Indicated: \(appDelegate.percentaccuracy)")
+    } else {
+        accuracy.text = "Classification: Incorrect"
+    }
+}
+    
+    @IBAction func defensivePressed(_ sender: Any) {
+        
+        if appDelegate.shots[contactIndex] == "Defensive" {     // you should probably force everything to lowercase, to avoid wrong test
+            accuracy.text = "Classification: Correct"
+            appDelegate.percentaccuracy += 1
+            print("Real Shot Indicated: \(appDelegate.percentaccuracy)")
+    } else {
+        accuracy.text = "Classification: Incorrect"
+    }
+}
+    
+    @IBAction func drivePressed(_ sender: Any) {
+        
+        if appDelegate.shots[contactIndex] == "Drive" {     // you should probably force everything to lowercase, to avoid wrong test
+            accuracy.text = "Classification: Correct"
+            appDelegate.percentaccuracy += 1
+    } else {
+        accuracy.text = "Classification: Incorrect"
+    }
+}
+    
+    @IBAction func pullPressed(_ sender: Any) {
+        
+        if appDelegate.shots[contactIndex] == "Pull" {     // you should probably force everything to lowercase, to avoid wrong test
+            accuracy.text = "Classification: Correct"
+            appDelegate.percentaccuracy += 1
+    } else {
+        accuracy.text = "Classification: Incorrect"
+    }
+}
+    
+    @IBAction func sweepPressed(_ sender: Any) {
+        
+        if appDelegate.shots[contactIndex] == "Sweep" {     // you should probably force everything to lowercase, to avoid wrong test
+            accuracy.text = "Classification: Correct"
+            appDelegate.percentaccuracy += 1
+    } else {
+        accuracy.text = "Classification: Incorrect"
+    }
+}
     
 
 }

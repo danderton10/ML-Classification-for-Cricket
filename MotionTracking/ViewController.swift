@@ -263,6 +263,13 @@ class ViewController: UIViewController, ChartViewDelegate {
         print(formatter1.string(from: date))
         appDelegate.endtimes.append(formatter1.string(from: date))
         
+        let c = Double(appDelegate.shots.count)
+        
+        let acc = Double((Double(appDelegate.percentaccuracy/c))*100.0)
+        print(acc)
+        
+        appDelegate.overallaccuracy.append(Double(acc))
+        
         
         let image = pieChartshots.getChartImage(transparent: false)!
         
@@ -282,6 +289,7 @@ class ViewController: UIViewController, ChartViewDelegate {
         appDelegate.rotZ_graph.removeAll()
         
         appDelegate.shots.removeAll()
+        print(appDelegate.shots)
         
         appDelegate.firstclick = true
         
@@ -436,6 +444,7 @@ extension ViewController: WCSessionDelegate {
               appDelegate.rotZ_graph.removeAll()
               
               appDelegate.shots.removeAll()
+              print(appDelegate.shots)
               
               appDelegate.firstclick = true
               
@@ -499,7 +508,7 @@ extension ViewController: WCSessionDelegate {
             
             activityPrediction()
             
-//            if self.count > 1 {
+            if readFile.isEmpty == false {
                 
             self.classlabel.text = self.activityPrediction2() ?? "N/A"
             
@@ -514,7 +523,7 @@ extension ViewController: WCSessionDelegate {
             }
             updateLineChart(line_entries: line_entries, name: "X Rotation")
                 
-//            }
+            }
             
             print(appDelegate.shots)
 
