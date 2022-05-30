@@ -44,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var overallaccuracy = [Double]()
     
+    var save = false
+    
     
 }
 

@@ -275,6 +275,8 @@ class ViewController: UIViewController, ChartViewDelegate {
         }
         else {appDelegate.overallaccuracy.append(0.0)}
         
+        status = true
+        
         
         let image = pieChartshots.getChartImage(transparent: false)!
         
@@ -288,6 +290,9 @@ class ViewController: UIViewController, ChartViewDelegate {
             appDelegate.session_no += 1
         }
         
+        print(appDelegate.session_no)
+        print(appDelegate.starttimes)
+        
         appDelegate.stats.removeAll()
         appDelegate.accX_graph.removeAll()
         appDelegate.accY_graph.removeAll()
@@ -300,6 +305,8 @@ class ViewController: UIViewController, ChartViewDelegate {
         print(appDelegate.shots)
         
         appDelegate.firstclick = true
+        
+        
         
         updateChartData()
         self.shotlabel.text = String(0)
@@ -484,6 +491,8 @@ extension ViewController: WCSessionDelegate {
                 appDelegate.starttimes.append(formatter1.string(from: date))
                 
             }
+            
+            appDelegate.firstclick = true
             
             status = false
             

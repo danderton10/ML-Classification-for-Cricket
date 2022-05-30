@@ -115,6 +115,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Session History" id="k3t-kD-YVJ"/>
                     <connections>
+                        <outlet property="tableview" destination="Sgs-97-UfE" id="zlA-yN-Q2g"/>
                         <segue destination="Adn-8m-nAQ" kind="show" identifier="Show History" id="nmV-MB-rBm"/>
                     </connections>
                 </tableViewController>
@@ -248,6 +249,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Shot Logs" id="PZn-O4-Apd"/>
                     <connections>
+                        <outlet property="tableview" destination="Dqp-Co-TfX" id="Aoo-pW-wy2"/>
                         <segue destination="Gx0-Dg-cxa" kind="show" identifier="Show Contact" id="4VZ-Hj-f33"/>
                     </connections>
                 </tableViewController>

@@ -12,13 +12,17 @@ class HistoryTableViewController: UITableViewController {
 
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var sessionSelected = 0
-
+    @IBOutlet var tableview: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            tableview.reloadData()
+        }
 
     // MARK: - Table view data source
 
