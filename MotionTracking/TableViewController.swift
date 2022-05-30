@@ -40,12 +40,10 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Contact Cell", for: indexPath)
-        let tablecounter = Array(stride(from: 1, through: appDelegate.shots.count, by: 1))
-
-//        let firstName = appDelegate.shots[indexPath.row]["firstName"]
-//        let lastName = appDelegate.shots[indexPath.row]["lastName"]
         
+        let tablecounter = Array(stride(from: 1, through: appDelegate.shots.count, by: 1))
         cell.textLabel?.text = "Shot \(tablecounter[indexPath.row]): \(appDelegate.shots[indexPath.row])"
+//        tableView.reloadData()
 
         return cell
     }
@@ -72,9 +70,6 @@ class TableViewController: UITableViewController {
              showContactViewController.contactIndex = shotSelected
          }
      }
-
-
-
 
 
 }

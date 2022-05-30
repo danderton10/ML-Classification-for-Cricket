@@ -150,6 +150,14 @@ extension InterfaceController: WCSessionDelegate {
   
   func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
     print("received data: \(message)")
+      if (message["iPhone"] as? String) != nil {
+          watchDelegate.shotCount = 0
+          
+          self.shotCountLabel.setText("Shot Count: \(watchDelegate.shotCount)")
+          self.gravityLabel.setText("")
+          self.userAccelLabel.setText("")
+          self.rotationLabel.setText("")
+      }
   }
     
 }

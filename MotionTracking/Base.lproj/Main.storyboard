@@ -20,21 +20,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Shot Statistics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gyD-c5-7jP">
-                                <rect key="frame" x="35" y="52" width="313" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shot Statistics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gyD-c5-7jP">
+                                <rect key="frame" x="0.0" y="51" width="414" height="43"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="I1g-DW-faH"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Rockwell-Regular" family="Rockwell" pointSize="31"/>
                                 <color key="textColor" red="0.33333334329999997" green="0.055044422789999999" blue="0.04620728508" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7x-yu-l7v" customClass="RadarChartView" customModule="Charts">
-                                <rect key="frame" x="35" y="252" width="313" height="349"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7x-yu-l7v" customClass="RadarChartView" customModule="Charts">
+                                <rect key="frame" x="28" y="187" width="354" height="415"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Shot Selected" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBs-80-Yd7">
+                                        <rect key="frame" x="0.0" y="-31" width="354" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="GzW-JE-neZ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="TBs-80-Yd7" firstAttribute="top" secondItem="x7x-yu-l7v" secondAttribute="top" constant="-31" id="AuB-zY-RA9"/>
+                                    <constraint firstItem="TBs-80-Yd7" firstAttribute="leading" secondItem="x7x-yu-l7v" secondAttribute="leading" id="Rpr-s4-rzd"/>
+                                    <constraint firstAttribute="trailing" secondItem="TBs-80-Yd7" secondAttribute="trailing" id="qy9-zE-1DR"/>
+                                </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZ1-hH-e9B">
-                                <rect key="frame" x="35" y="103" width="313" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZ1-hH-e9B">
+                                <rect key="frame" x="28" y="102" width="354" height="37"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" systemColor="systemIndigoColor"/>
                                 <state key="normal" title="Button"/>
@@ -47,6 +63,18 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90477002870142686" green="0.98673537234042552" blue="0.87305241024862601" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="xE4-Dv-35i" firstAttribute="top" secondItem="x7x-yu-l7v" secondAttribute="bottom" constant="211" id="7mq-so-DFX"/>
+                            <constraint firstItem="x7x-yu-l7v" firstAttribute="leading" secondItem="qZ1-hH-e9B" secondAttribute="leading" id="IoR-di-Aqo"/>
+                            <constraint firstItem="x7x-yu-l7v" firstAttribute="top" secondItem="pFP-i9-S48" secondAttribute="top" constant="187" id="JbN-L9-SBi"/>
+                            <constraint firstItem="x7x-yu-l7v" firstAttribute="top" secondItem="qZ1-hH-e9B" secondAttribute="bottom" constant="48" id="Qya-nS-OOT"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="x7x-yu-l7v" secondAttribute="trailing" constant="12" id="UXq-dR-IKz"/>
+                            <constraint firstItem="qZ1-hH-e9B" firstAttribute="top" secondItem="gyD-c5-7jP" secondAttribute="bottom" constant="8" symbolic="YES" id="d0t-wp-YSu"/>
+                            <constraint firstItem="x7x-yu-l7v" firstAttribute="trailing" secondItem="qZ1-hH-e9B" secondAttribute="trailing" id="iQ3-aO-HmT"/>
+                            <constraint firstItem="gyD-c5-7jP" firstAttribute="leading" secondItem="pFP-i9-S48" secondAttribute="leading" id="jlm-jE-XRV"/>
+                            <constraint firstAttribute="trailing" secondItem="gyD-c5-7jP" secondAttribute="trailing" id="nPh-XX-wFq"/>
+                            <constraint firstItem="x7x-yu-l7v" firstAttribute="leading" secondItem="pFP-i9-S48" secondAttribute="leadingMargin" constant="8" id="p2C-51-acx"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Statistics" image="chart.bar.xaxis" catalog="system" selectedImage="chart.bar.xaxis" id="m7f-5e-KzO">
                         <color key="badgeColor" red="1" green="0.86873543149999999" blue="0.86863978549999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -54,6 +82,7 @@
                     <connections>
                         <outlet property="btnSelectFruit" destination="qZ1-hH-e9B" id="Oo9-fq-CYR"/>
                         <outlet property="radarChart" destination="x7x-yu-l7v" id="bxN-yr-rga"/>
+                        <outlet property="shotlabel" destination="TBs-80-Yd7" id="iEl-Nh-o4A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RxJ-DF-xqY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

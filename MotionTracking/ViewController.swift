@@ -254,7 +254,6 @@ class ViewController: UIViewController, ChartViewDelegate {
     
 
     
-    
     @IBAction func SaveSession(_ sender: Any) {
         
         let date = Date()
@@ -273,7 +272,27 @@ class ViewController: UIViewController, ChartViewDelegate {
         appDelegate.image.append(string!)
         
         appDelegate.session_no += 1
-
+        
+        appDelegate.stats.removeAll()
+        appDelegate.accX_graph.removeAll()
+        appDelegate.accY_graph.removeAll()
+        appDelegate.accZ_graph.removeAll()
+        appDelegate.rotX_graph.removeAll()
+        appDelegate.rotY_graph.removeAll()
+        appDelegate.rotZ_graph.removeAll()
+        
+        appDelegate.shots.removeAll()
+        
+        appDelegate.firstclick = true
+        
+        if let validSession = self.session, validSession.isReachable {
+            print("Hello")
+          let data: [String: Any] = ["iPhone": "Data from iPhone" as Any] // Create your Dictionay as per uses
+          validSession.sendMessage(data, replyHandler: nil, errorHandler: { error in
+              // catch any errors here
+              print(error)
+              }
+          )}
         
     }
     
@@ -389,7 +408,42 @@ extension ViewController: WCSessionDelegate {
           if (message["watch"] as? String) != nil {
           
           self.shotlabel.text = String(0)
-          appDelegate.shots.removeAll()
+              
+              
+              let date = Date()
+              let formatter1 = DateFormatter()
+      //        formatter1.dateStyle = .full
+              formatter1.dateFormat = "HH:mm E, d MMM y"
+              print(formatter1.string(from: date))
+              appDelegate.endtimes.append(formatter1.string(from: date))
+              
+              
+              let image = pieChartshots.getChartImage(transparent: false)!
+              
+              let string = image.toPngString() // it will convert UIImage to string
+
+              
+              appDelegate.image.append(string!)
+              
+              appDelegate.session_no += 1
+              
+              appDelegate.stats.removeAll()
+              appDelegate.accX_graph.removeAll()
+              appDelegate.accY_graph.removeAll()
+              appDelegate.accZ_graph.removeAll()
+              appDelegate.rotX_graph.removeAll()
+              appDelegate.rotY_graph.removeAll()
+              appDelegate.rotZ_graph.removeAll()
+              
+              appDelegate.shots.removeAll()
+              
+              appDelegate.firstclick = true
+              
+              
+              
+              
+              
+//          appDelegate.shots.removeAll()
           updateChartData()
               status = true
       }

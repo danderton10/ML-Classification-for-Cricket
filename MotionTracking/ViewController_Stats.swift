@@ -21,6 +21,8 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
     @IBOutlet weak var btnSelectFruit: UIButton!
     @IBOutlet weak var radarChart: RadarChartView!
     
+    @IBOutlet weak var shotlabel: UILabel!
+    
     var contactIndex = 0
     let transparentView = UIView()
     let tableView = UITableView()
@@ -31,9 +33,9 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
     var selectedButton = UIButton()
     var dataSource = [String]()
     
-    var firstclick = true
+//    var firstclick = true
     
-    let subjects = ["English", "Math", "Physics", "Chemistry"]
+    var array = ["Bat Speed","Quality","Bat Angle","Power"]
     
 
     override func viewDidLoad() {
@@ -42,15 +44,6 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CellClass.self, forCellReuseIdentifier: "Cell")
-        
-        let axis = appDelegate.stats[0]
-        
-        for x in 0...appDelegate.stats.count {
-            line_entries.append(RadarChartDataEntry(value: axis[x]!))
-        }
-        
-        updateRadarChart(line_entries: line_entries, dataPoints: subjects, name: "Shot 1")
-        
         
     }
     
@@ -85,69 +78,72 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
 
     @IBAction func onClickSelectFruit(_ sender: Any) {
         
-        if firstclick == true {
+        if appDelegate.firstclick == true {
             
-            for x in 1...appDelegate.shots.count {
-                dataSource.append("Shot \(x)")
+            if appDelegate.shots.count > 0 {
+            
+                for x in 1...appDelegate.shots.count {
+                
+                    dataSource.append("Shot \(x)")
+                }
             }
+                else{dataSource.removeAll()}
             
         }
         
         selectedButton = btnSelectFruit
         addTransparentView(frames: btnSelectFruit.frame)
         
-        firstclick = false
+        appDelegate.firstclick = false
     }
 
     
 
-    func updateRadarChart(line_entries: [RadarChartDataEntry], dataPoints: [String], name: String) {
+    func updateRadarChart(line_entries: [RadarChartDataEntry], name: String) {
         
-        let set = RadarChartDataSet(entries: line_entries, label: name)
-        set.colors = ChartColorTemplates.pastel()
+        let set = RadarChartDataSet(entries: line_entries)
         let data = RadarChartData(dataSet: set)
-        radarChart.data = data
         
-        set.lineWidth = 2
+        
+        set.lineWidth = 3
 
-        // 2
         let redColor = UIColor(red: 247/255, green: 67/255, blue: 115/255, alpha: 1)
         let redFillColor = UIColor(red: 247/255, green: 67/255, blue: 115/255, alpha: 0.6)
         set.colors = [redColor]
         set.fillColor = redFillColor
         set.drawFilledEnabled = true
         set.drawValuesEnabled = false
+        set.colors = [NSUIColor(red: CGFloat(0/255), green: CGFloat(255.0/255), blue: CGFloat(255.0/255), alpha: 1)]
         
         
-        // 2
+        
         radarChart.webLineWidth = 1.5
         radarChart.innerWebLineWidth = 1.5
         radarChart.webColor = .lightGray
         radarChart.innerWebColor = .lightGray
 
-        // 3
         let xAxis = radarChart.xAxis
         xAxis.labelFont = .systemFont(ofSize: 9, weight: .bold)
         xAxis.labelTextColor = .black
         xAxis.xOffset = 10
         xAxis.yOffset = 10
+        xAxis.drawLabelsEnabled = true
         
-        let array = ["a","b","c","e"]
+        xAxis.gridLineWidth = CGFloat(10.0)
+        
+        
         xAxis.valueFormatter = IndexAxisValueFormatter(values: array)
+        xAxis.labelFont = .systemFont(ofSize: 11, weight: .semibold)
 
-        // 4
         let yAxis = radarChart.yAxis
         yAxis.labelFont = .systemFont(ofSize: 9, weight: .light)
-        yAxis.labelCount = 6
+        yAxis.labelCount = 5
         yAxis.drawTopYLabelEntryEnabled = false
         yAxis.axisMinimum = 0
+        
+        radarChart.data = data
 
-        // 5
-        radarChart.legend.enabled = true
-        
-        radarChart.xAxis.drawLabelsEnabled = false
-        
-        
+        radarChart.legend.enabled = false
         
     }
 
@@ -179,7 +175,9 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
         for x in 0...appDelegate.stats.count {
             line.append(RadarChartDataEntry(value: axis[x]!))
         }
-        updateRadarChart(line_entries: line, dataPoints: subjects, name: "Shot \(shotSelected+1)")
+        updateRadarChart(line_entries: line, name: "Shot \(shotSelected+1)")
+        
+        shotlabel.text = "Shot \(shotSelected+1)"
         
         
         
