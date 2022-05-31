@@ -40,6 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var percentaccuracy = 0.0
     var overallaccuracy = [Double]()
     
+    var orientation = [String]()
+    var name = [String]()
     
 }
 

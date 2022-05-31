@@ -20,7 +20,7 @@ class HistoryViewController: UIViewController {
     @IBOutlet weak var durationend: UILabel!
     @IBOutlet weak var acc: UILabel!
     @IBOutlet weak var chart: UIImageView!
-//    @IBOutlet weak var shot: UILabel!
+    @IBOutlet weak var name: UILabel!
     
     var sessionIndex = 0
     
@@ -39,6 +39,8 @@ class HistoryViewController: UIViewController {
         chart.image = appDelegate.image[sessionIndex].toImage() // it will convert String  to UIImage
         
         acc.text = "Accuracy: \(appDelegate.overallaccuracy[sessionIndex]) %"
+        
+        name.text = "\(appDelegate.name[sessionIndex]) (\(appDelegate.orientation[sessionIndex]))"
     }
 
 }

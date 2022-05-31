@@ -13,7 +13,7 @@ import CoreML
 import Charts
 
 
-class ViewController: UIViewController, ChartViewDelegate {
+class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
   
@@ -27,6 +27,8 @@ class ViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var classlabel: UILabel!
     @IBOutlet weak var pieChartshots: PieChartView!
     @IBOutlet weak var lineChart: LineChartView!
+    @IBOutlet weak var segmentedcontrol: UISegmentedControl!
+    @IBOutlet weak var textfield: UITextField!
     
     
     var defensiveDataEntry = PieChartDataEntry(value: 0)
@@ -42,6 +44,7 @@ class ViewController: UIViewController, ChartViewDelegate {
     var readFile = ""
     var graph = 0
     var status = true
+    
     
 
     
@@ -94,9 +97,23 @@ class ViewController: UIViewController, ChartViewDelegate {
         pieChartshots.delegate = self
         lineChart.delegate = self
         
+        textfield.delegate = self
+        
         self.configureWatchKitSession()
         
         updateChartData()
+        
+        let bottomline = CALayer()
+        
+        bottomline.frame = CGRect(x: 0, y: textfield.frame.height, width: textfield.frame.width, height: 2)
+        
+        bottomline.backgroundColor = UIColor.init(red: 48/255, green: 173/255, blue: 99/255, alpha: 1).cgColor
+        
+        textfield.borderStyle = .none
+        textfield.layer.addSublayer(bottomline)
+        
+        
+        
     }
     
     // Configure Watch Connection
@@ -254,6 +271,21 @@ class ViewController: UIViewController, ChartViewDelegate {
         updateLineChart(line_entries: line, name: "Z Rotation")
     }
     
+    
+    
+    @IBAction func orientationtoggle(_ sender: Any) {
+        
+        switch segmentedcontrol.selectedSegmentIndex
+        {
+        case 0:
+            appDelegate.orientation[appDelegate.session_no] = "Left Handed"
+        case 1:
+            appDelegate.orientation[appDelegate.session_no] = "Right Handed"
+        default:
+            break
+        }
+        
+    }
 
     
     @IBAction func SaveSession(_ sender: Any) {
@@ -300,6 +332,9 @@ class ViewController: UIViewController, ChartViewDelegate {
         print(appDelegate.shots)
         
         appDelegate.firstclick = true
+        
+        appDelegate.name.append(textfield.text!)
+        print(appDelegate.name)
         
         
         updateChartData()
@@ -392,6 +427,45 @@ class ViewController: UIViewController, ChartViewDelegate {
       return modelPrediction?.label
     }
     
+    
+    // This function is called when you click return key in the text field.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        print("textFieldShouldReturn")
+        
+        // Resign the first responder from textField to close the keyboard.
+        textField.resignFirstResponder()
+        
+
+        
+        
+        return true
+    }
+    
+    
+    
+    // This function is called when you input text in the textView.
+        func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{
+            
+            print("textView.")
+            
+            print("input text is : \(text)")
+            
+            // If user press return key in the keyboard.
+            if("\n" == text){
+                
+                // Resign first responder from UITextView to close the keyboard.
+                textView.resignFirstResponder()
+                
+                return false
+            }
+            
+            return true
+        }
+    
+    
+    
+    
 }
 
 
@@ -463,6 +537,7 @@ extension ViewController: WCSessionDelegate {
             
             appDelegate.firstclick = true
             status = false
+            appDelegate.orientation.append("Right Handed")
         }
           
         if let value = message["off"] as? String {
