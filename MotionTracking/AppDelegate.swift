@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var image = [String]()
     
     var firstclick = true
-    
     var percentaccuracy = 0.0
     var overallaccuracy = [Double]()
     

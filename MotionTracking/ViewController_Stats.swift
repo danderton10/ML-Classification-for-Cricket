@@ -175,5 +175,4 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
         shotlabel.text = "Shot \(shotSelected+1)"
         
     }
-
 }
