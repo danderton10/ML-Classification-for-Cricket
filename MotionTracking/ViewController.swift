@@ -45,6 +45,29 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
     var graph = 0
     var status = true
     
+    var template_cut = [String]()
+    
+    
+    struct Template {
+        
+        var accX_template: String = ""
+        var accY_template: String = ""
+        var accZ_template: String = ""
+        var rotX_template: String = ""
+        var rotY_template: String = ""
+        var rotZ_template: String = ""
+        
+        init(raw: [String]) {
+            
+            accX_template = raw[0]
+            accY_template = raw[1]
+            accZ_template = raw[2]
+            rotX_template = raw[3]
+            rotY_template = raw[4]
+            rotZ_template = raw[5]
+            
+        }
+    }
     
 
     
@@ -62,6 +85,12 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
     // Initialize the model, layers, and sensor data arrays
       private let classifier = FYP_1()
       private let modelName:String = "ShotClassifier"
+    
+    
+    
+    var temp_cut_xg = [String]()
+    
+    
     
     
     let accX_final = try? MLMultiArray(
@@ -111,7 +140,6 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
         
         textfield.borderStyle = .none
         textfield.layer.addSublayer(bottomline)
-        
         
         
     }
@@ -400,12 +428,10 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
             appDelegate.accY_graph.append(appDelegate.accY_edit)
             appDelegate.accZ_graph.append(appDelegate.accZ_edit)
             
-            
-            let features = [appDelegate.accZ_edit.max()!,appDelegate.accZ_edit.max()!,appDelegate.accX_edit.max()!,appDelegate.accX_edit.max()!]
-            
-            appDelegate.stats.append(features)
+            PerformanceParameters()
             
             graph = graph + 1
+            
         }
     }
     
@@ -443,6 +469,112 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
     }
     
     
+    
+    
+    func PerformanceParameters() {
+        
+        // BAT SPEED
+        let g_y_max_av = appDelegate.rotY_edit.max()!
+        let g_z_max_av = appDelegate.rotZ_edit.max()!
+        let omega = sqrt(pow(g_y_max_av, 2) + pow(g_z_max_av, 2))
+        let RacketSpeedAverage = omega*0.769
+        
+        
+        // SHOT QUALITY
+        
+        var temp_defensive = getCSVData(from: "Template_Defensive")
+        var temp_drive = getCSVData(from: "Template_Drive")
+        var temp_cut = getCSVData(from: "Template_Cut")
+        var temp_pull = getCSVData(from: "Template_Pull")
+        var temp_sweep = getCSVData(from: "Template_Sweep")
+        
+        var temp_def = [[Double]]()
+        var temp_drv = [[Double]]()
+        var temp_ct = [[Double]]()
+        var temp_pll = [[Double]]()
+        var temp_swp = [[Double]]()
+        
+        for x in 0...5 {
+            temp_def.append(temp_defensive[x].doubleArray)
+            temp_drv.append(temp_drive[x].doubleArray)
+            temp_ct.append(temp_cut[x].doubleArray)
+            temp_pll.append(temp_pull[x].doubleArray)
+            temp_swp.append(temp_sweep[x].doubleArray)
+        }
+        
+        var consistency = [0.0,0.0,0.0,0.0,0.0,0.0]
+        print(temp_swp[0])
+            
+        for i in (0...119) {
+            consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_drv[0].index(0, offsetBy: i))),2))
+            consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_drv[1].index(0, offsetBy: i))),2))
+            consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_drv[2].index(0, offsetBy: i))),2))
+            consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_drv[3].index(0, offsetBy: i))),2))
+            consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_drv[4].index(0, offsetBy: i))),2))
+            consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_drv[5].index(0, offsetBy: i))),2))
+        }
+        
+        print(consistency[0])
+        
+
+        // Values need taking from Python Code
+        
+        consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+        consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+        consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+        consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+        consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+        consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+        
+        let sumArray = consistency.reduce(0, +)
+        let avgconsistency = sumArray / Double(consistency.count)
+
+        let features = [RacketSpeedAverage,avgconsistency,appDelegate.accX_edit.max()!,appDelegate.accX_edit.max()!]
+        appDelegate.stats.append(features)
+    }
+    
+    
+    func getCSVData(from csvName: String) -> [[String]] {
+        
+        var temp_xa = [String]()
+        var temp_ya = [String]()
+        var temp_za = [String]()
+        var temp_xg = [String]()
+        var temp_yg = [String]()
+        var temp_zg = [String]()
+        
+        guard let filePath = Bundle.main.path(forResource: csvName, ofType: "csv") else {
+            return []
+        }
+        
+        var data = ""
+        do {
+            data = try String(contentsOfFile: filePath)
+        } catch {
+            print(error)
+            return []
+        }
+        
+        var rows = data.components(separatedBy: "\n")
+        rows.removeFirst()
+        
+        for row in rows {
+            
+            let csvColumns = row.components(separatedBy: ",")
+            temp_xa.append(csvColumns[0])
+            temp_ya.append(csvColumns[0])
+            temp_za.append(csvColumns[0])
+            temp_xg.append(csvColumns[0])
+            temp_yg.append(csvColumns[0])
+            temp_zg.append(csvColumns[0])
+        }
+        
+        let csvToStruct = [temp_xa, temp_ya, temp_za, temp_xg, temp_yg, temp_zg]
+        
+        return csvToStruct
+    }
+
+
     
     // This function is called when you input text in the textView.
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool{

@@ -96,6 +96,9 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
         addTransparentView(frames: btnSelectFruit.frame)
         appDelegate.firstclick = false
     }
+    
+    
+    
 
     
     
