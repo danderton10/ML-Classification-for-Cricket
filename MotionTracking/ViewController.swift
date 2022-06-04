@@ -45,7 +45,11 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
     var graph = 0
     var status = true
     
-    var template_cut = [String]()
+//    var template_cut = [String]()
+    
+    var gravityX = [Double]()
+    var gravityY = [Double]()
+    var gravityZ = [Double]()
     
     
     struct Template {
@@ -400,6 +404,9 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
             let accX = sep[367...486]
             let accY = sep[489...608]
             let accZ = sep[611...730]
+            let gravX = sep[733...852]
+            let gravY = sep[855...974]
+            let gravZ = sep[977...1096]
 
             appDelegate.rotX_edit = rotX.doubleArray
             appDelegate.rotY_edit = rotY.doubleArray
@@ -407,16 +414,20 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
             appDelegate.accX_edit = accX.doubleArray
             appDelegate.accY_edit = accY.doubleArray
             appDelegate.accZ_edit = accZ.doubleArray
+            
+            
+            gravityX = gravX.doubleArray
+            gravityY = gravY.doubleArray
+            gravityZ = gravZ.doubleArray
+            
     
             for j in (0...119) {
-                
                 self.rotX_final![j] = appDelegate.rotX_edit[j] as NSNumber
                 self.rotY_final![j] = appDelegate.rotY_edit[j] as NSNumber
                 self.rotZ_final![j] = appDelegate.rotZ_edit[j] as NSNumber
                 self.accX_final![j] = appDelegate.accX_edit[j] as NSNumber
                 self.accY_final![j] = appDelegate.accY_edit[j] as NSNumber
                 self.accZ_final![j] = appDelegate.accZ_edit[j] as NSNumber
-                
             }
             
             print(rotX_final as Any)
@@ -482,11 +493,11 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
         
         // SHOT QUALITY
         
-        var temp_defensive = getCSVData(from: "Template_Defensive")
-        var temp_drive = getCSVData(from: "Template_Drive")
-        var temp_cut = getCSVData(from: "Template_Cut")
-        var temp_pull = getCSVData(from: "Template_Pull")
-        var temp_sweep = getCSVData(from: "Template_Sweep")
+        let temp_defensive = getCSVData(from: "Template_Defensive")
+        let temp_drive = getCSVData(from: "Template_Drive")
+        let temp_cut = getCSVData(from: "Template_Cut")
+        let temp_pull = getCSVData(from: "Template_Pull")
+        let temp_sweep = getCSVData(from: "Template_Sweep")
         
         var temp_def = [[Double]]()
         var temp_drv = [[Double]]()
@@ -504,32 +515,241 @@ class ViewController: UIViewController, ChartViewDelegate, UITextFieldDelegate {
         
         var consistency = [0.0,0.0,0.0,0.0,0.0,0.0]
         print(temp_swp[0])
+        
+        var avgconsistency = Double()
+        
+        if self.classlabel.text == "Defensive" {
+            for i in (0...119) {
+                consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_def[0].index(0, offsetBy: i))),2))
+                consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_def[1].index(0, offsetBy: i))),2))
+                consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_def[2].index(0, offsetBy: i))),2))
+                consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_def[3].index(0, offsetBy: i))),2))
+                consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_def[4].index(0, offsetBy: i))),2))
+                consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_def[5].index(0, offsetBy: i))),2))
+            }
             
-        for i in (0...119) {
-            consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_drv[0].index(0, offsetBy: i))),2))
-            consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_drv[1].index(0, offsetBy: i))),2))
-            consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_drv[2].index(0, offsetBy: i))),2))
-            consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_drv[3].index(0, offsetBy: i))),2))
-            consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_drv[4].index(0, offsetBy: i))),2))
-            consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_drv[5].index(0, offsetBy: i))),2))
+            consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+            consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+            consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+            consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+            consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+            consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+            
+            let sumArray = consistency.reduce(0, +)
+            avgconsistency = sumArray / Double(consistency.count)
         }
         
-        print(consistency[0])
+        if self.classlabel.text == "Drive" {
+            for i in (0...119) {
+                consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_drv[0].index(0, offsetBy: i))),2))
+                consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_drv[1].index(0, offsetBy: i))),2))
+                consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_drv[2].index(0, offsetBy: i))),2))
+                consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_def[3].index(0, offsetBy: i))),2))
+                consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_drv[4].index(0, offsetBy: i))),2))
+                consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_drv[5].index(0, offsetBy: i))),2))
+            }
+            
+            consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+            consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+            consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+            consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+            consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+            consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+            
+            let sumArray = consistency.reduce(0, +)
+            avgconsistency = sumArray / Double(consistency.count)
+        }
+        
+        if self.classlabel.text == "Cut" {
+            for i in (0...119) {
+                consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_cut[0].index(0, offsetBy: i))),2))
+                consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_cut[1].index(0, offsetBy: i))),2))
+                consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_cut[2].index(0, offsetBy: i))),2))
+                consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_cut[3].index(0, offsetBy: i))),2))
+                consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_cut[4].index(0, offsetBy: i))),2))
+                consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_cut[5].index(0, offsetBy: i))),2))
+            }
+            
+            consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+            consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+            consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+            consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+            consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+            consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+            
+            let sumArray = consistency.reduce(0, +)
+            avgconsistency = sumArray / Double(consistency.count)
+        }
+        
+        if self.classlabel.text == "Pull" {
+            for i in (0...119) {
+                consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_pll[0].index(0, offsetBy: i))),2))
+                consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_pll[1].index(0, offsetBy: i))),2))
+                consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_pll[2].index(0, offsetBy: i))),2))
+                consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_pll[3].index(0, offsetBy: i))),2))
+                consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_pll[4].index(0, offsetBy: i))),2))
+                consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_pll[5].index(0, offsetBy: i))),2))
+            }
+            
+            consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+            consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+            consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+            consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+            consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+            consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+            
+            let sumArray = consistency.reduce(0, +)
+            avgconsistency = sumArray / Double(consistency.count)
+        }
+        
+        if self.classlabel.text == "Sweep" {
+            for i in (0...119) {
+                consistency[0] = consistency[0] + sqrt(pow((appDelegate.accX_edit[i])-Double((temp_swp[0].index(0, offsetBy: i))),2))
+                consistency[1] = consistency[1] + sqrt(pow((appDelegate.accY_edit[i])-Double((temp_swp[1].index(0, offsetBy: i))),2))
+                consistency[2] = consistency[2] + sqrt(pow((appDelegate.accZ_edit[i])-Double((temp_swp[2].index(0, offsetBy: i))),2))
+                consistency[3] = consistency[3] + sqrt(pow((appDelegate.rotX_edit[i])-Double((temp_swp[3].index(0, offsetBy: i))),2))
+                consistency[4] = consistency[4] + sqrt(pow((appDelegate.rotY_edit[i])-Double((temp_swp[4].index(0, offsetBy: i))),2))
+                consistency[5] = consistency[5] + sqrt(pow((appDelegate.rotZ_edit[i])-Double((temp_swp[5].index(0, offsetBy: i))),2))
+            }
+            
+            consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
+            consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
+            consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
+            consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
+            consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
+            consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
+            
+            let sumArray = consistency.reduce(0, +)
+            avgconsistency = sumArray / Double(consistency.count)
+        }
+        
+        if avgconsistency < 0 {
+            avgconsistency = 0
+        }
+        
+        
+        // Initial Bat Lift Angle
+        
+        let initialangles_lookup = Array(stride(from: 45.0, through: 180.0, by: 0.1))
+        
+        let no_init = initialangles_lookup.count
+        let increment = 0.9/Double(no_init)
+        
+        var yvals = [Double]()
+        var idx = [Double]()
+        
+        for x in 0...no_init {
+            
+            yvals.append(0.1 + Double(x)*increment)
+            idx.append(abs(yvals[x] - gravityY[0]))
+        }
+                
+        
+        let value = idx.min()!
+        let index = idx.firstIndex(of: value)!
+        let InitialAngle = initialangles_lookup[index]
+
+
+        
+        // Impact Bat Lift Angle
+        
+        var ImpactAngle = Double()
+        
+        if self.classlabel.text == "Defensive" {
+            
+            let impactangles_lookup = Array(stride(from: -10.0, through: 45.0, by: 0.1))
+            let no_imp_def = impactangles_lookup.count
+            let increment = 0.1/Double(no_imp_def)
+            var yvals = [Double]()
+            var idx = [Double]()
+            
+            for x in 0...no_imp_def-1 {
+                yvals.append(0.9 - Double(x)*increment)
+                idx.append(abs(yvals[x] - gravityY[60]))
+            }
+                    
+            let value = idx.min()!
+            let index = idx.firstIndex(of: value)!
+            ImpactAngle = impactangles_lookup[index]
+        }
+        
+        if self.classlabel.text == "Drive" {
+            
+            let impactangles_lookup = Array(stride(from: -45.0, through: 45.0, by: 0.1))
+            let no_imp_drv = impactangles_lookup.count
+            let increment = 0.1/Double(no_imp_drv)
+            var yvals = [Double]()
+            var idx = [Double]()
+            
+            for x in 0...no_imp_drv-1 {
+                yvals.append(0.9 - Double(x)*increment)
+                idx.append(abs(yvals[x] - gravityY[60]))
+            }
+                    
+            let value = idx.min()!
+            let index = idx.firstIndex(of: value)!
+            ImpactAngle = impactangles_lookup[index]
+        }
+        
+        
+        if self.classlabel.text == "Cut" {
+            
+            let impactangles_lookup = Array(stride(from: 45.0, through: 160.0, by: 0.1))
+            let no_imp_cut = impactangles_lookup.count
+            let increment = 0.4/Double(no_imp_cut)
+            var yvals = [Double]()
+            var idx = [Double]()
+            
+            for x in 0...no_imp_cut-1 {
+                yvals.append(0.5 + Double(x)*increment)
+                idx.append(abs(yvals[x] - gravityZ[60]))
+            }
+                    
+            let value = idx.min()!
+            let index = idx.firstIndex(of: value)!
+            ImpactAngle = impactangles_lookup[index]
+        }
+        
+        if self.classlabel.text == "Pull" {
+            
+            let impactangles_lookup = Array(stride(from: 45.0, through: 160.0, by: 0.1))
+            let no_imp_pll = impactangles_lookup.count
+            let increment = 0.4/Double(no_imp_pll)
+            var yvals = [Double]()
+            var idx = [Double]()
+            
+            for x in 0...no_imp_pll-1 {
+                yvals.append(0.5 + Double(x)*increment)
+                idx.append(abs(yvals[x] - gravityZ[60]))
+            }
+                    
+            let value = idx.min()!
+            let index = idx.firstIndex(of: value)!
+            ImpactAngle = impactangles_lookup[index]
+        }
+        
+        
+        if self.classlabel.text == "Sweep" {
+            
+            let impactangles_lookup = Array(stride(from: 45.0, through: 160.0, by: 0.1))
+            let no_imp_swp = impactangles_lookup.count
+            let increment = 0.4/Double(no_imp_swp)
+            var yvals = [Double]()
+            var idx = [Double]()
+            
+            for x in 0...no_imp_swp-1 {
+                yvals.append(0.5 - Double(x)*increment)
+                idx.append(abs(yvals[x] - gravityZ[60]))
+            }
+                    
+            let value = idx.min()!
+            let index = idx.firstIndex(of: value)!
+            ImpactAngle = impactangles_lookup[index]
+        }
         
 
-        // Values need taking from Python Code
-        
-        consistency[0] = ((500.0-consistency[0])/400.0)*5.0 + 5.0
-        consistency[1] = ((500.0-consistency[1])/400.0)*5.0 + 5.0
-        consistency[2] = ((500.0-consistency[2])/400.0)*5.0 + 5.0
-        consistency[3] = ((500.0-consistency[3])/400.0)*5.0 + 5.0
-        consistency[4] = ((500.0-consistency[4])/400.0)*5.0 + 5.0
-        consistency[5] = ((500.0-consistency[5])/400.0)*5.0 + 5.0
-        
-        let sumArray = consistency.reduce(0, +)
-        let avgconsistency = sumArray / Double(consistency.count)
 
-        let features = [RacketSpeedAverage,avgconsistency,appDelegate.accX_edit.max()!,appDelegate.accX_edit.max()!]
+        let features = [RacketSpeedAverage,avgconsistency,InitialAngle,ImpactAngle]
         appDelegate.stats.append(features)
     }
     

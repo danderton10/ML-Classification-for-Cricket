@@ -32,7 +32,7 @@ class ViewController_Stats: UIViewController, ChartViewDelegate, UITableViewDele
     
     var line_entries = [RadarChartDataEntry]()
     var dataSource = [String]()
-    var array = ["Bat Speed","Quality","Bat Angle","Power"]
+    var array = ["Speed","Quality","Angle 1","Angle 2"]
     
 
     

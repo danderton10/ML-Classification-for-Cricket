@@ -66,6 +66,9 @@ class MotionManager {
     var x_acc = [Double]()
     var y_acc = [Double]()
     var z_acc = [Double]()
+    var x_grav = [Double]()
+    var y_grav = [Double]()
+    var z_grav = [Double]()
 
 
 
@@ -129,6 +132,11 @@ class MotionManager {
         self.x_acc.append(Double(deviceMotion.userAcceleration.x))
         self.y_acc.append(Double(deviceMotion.userAcceleration.y))
         self.z_acc.append(Double(deviceMotion.userAcceleration.z))
+        self.x_grav.append(Double(deviceMotion.gravity.x))
+        self.y_grav.append(Double(deviceMotion.gravity.y))
+        self.z_grav.append(Double(deviceMotion.gravity.z))
+        
+        
         self.i += 1
         
         let accmagnitude = sqrt(pow(deviceMotion.userAcceleration.x, 2) + pow(deviceMotion.userAcceleration.y, 2) + pow(deviceMotion.userAcceleration.z, 2))
@@ -146,7 +154,7 @@ class MotionManager {
             recentDetection = false
             magnitude_buffer.reset()
             
-            var ArrayOfSampleData2 = [[Double]](repeating: [Double](repeating: 0, count: 1), count: 6)
+            var ArrayOfSampleData2 = [[Double]](repeating: [Double](repeating: 0, count: 1), count: 9)
             
             let xg_shot = self.x_gyro[(i_detection-60)...(i_detection+60)]
             let yg_shot = self.y_gyro[(i_detection-60)...(i_detection+60)]
@@ -154,7 +162,9 @@ class MotionManager {
             let xa_shot = self.x_acc[(i_detection-60)...(i_detection+60)]
             let ya_shot = self.y_acc[(i_detection-60)...(i_detection+60)]
             let za_shot = self.z_acc[(i_detection-60)...(i_detection+60)]
-            print(zg_shot)
+            let xgrav_shot = self.x_grav[(i_detection-60)...(i_detection+60)]
+            let ygrav_shot = self.y_grav[(i_detection-60)...(i_detection+60)]
+            let zgrav_shot = self.z_grav[(i_detection-60)...(i_detection+60)]
 
             ArrayOfSampleData2[0].append(contentsOf: xg_shot)
             ArrayOfSampleData2[1].append(contentsOf: yg_shot)
@@ -162,6 +172,9 @@ class MotionManager {
             ArrayOfSampleData2[3].append(contentsOf: xa_shot)
             ArrayOfSampleData2[4].append(contentsOf: ya_shot)
             ArrayOfSampleData2[5].append(contentsOf: za_shot)
+            ArrayOfSampleData2[6].append(contentsOf: xgrav_shot)
+            ArrayOfSampleData2[7].append(contentsOf: ygrav_shot)
+            ArrayOfSampleData2[8].append(contentsOf: zgrav_shot)
             
             
             let encoded = try! JSONEncoder().encode(ArrayOfSampleData2)
